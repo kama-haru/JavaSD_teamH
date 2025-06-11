@@ -1,11 +1,11 @@
-package main;
+package student;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import tool.CommonServlet;
 
-public class StudentCreateExecuteController extends CommonServlet {
+public class StudentCreateController extends CommonServlet {
 
 	@Override
 	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
