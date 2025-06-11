@@ -3,25 +3,24 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import bean.Subject;
+import bean.School;
 
-public class SubjectDao extends DAO {
-    public Subject getSubject(String subjectCd) throws Exception {
+public class SchoolDao extends DAO {
+    public School getSchool(String schoolCd) throws Exception {
         Connection conn = getConnection();
-        String query = "SELECT * FROM SUBJECT WHERE CD = ?";
+        String query = "SELECT * FROM SCHOOL WHERE CD = ?";
         PreparedStatement pstmt = conn.prepareStatement(query);
-        pstmt.setString(1, subjectCd);
+        pstmt.setString(1, schoolCd);
         ResultSet rs = pstmt.executeQuery();
 
-        Subject subject = null;
+        School school = null;
         if (rs.next()) {
-            subject = new Subject(
-                rs.getString("SCHOOL_CD"),
+            school = new School(
                 rs.getString("CD"),
                 rs.getString("NAME")
             );
         }
         conn.close();
-        return subject;
+        return school;
     }
 }
