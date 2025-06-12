@@ -18,6 +18,11 @@
             width: 300px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
         input[type="text"], input[type="password"] {
             width: 100%;
             padding: 8px;
@@ -58,6 +63,16 @@
     <h2>ログイン</h2>
 
     <div class="login-container">
+        <%-- エラーメッセージの表示 --%>
+        <%
+            String errorType = (String) request.getAttribute("errorType");
+            if ("LOGIN".equals(errorType)) {
+        %>
+            <div class="error-message">
+                ログインに失敗しました。IDまたはパスワードが正しくありません。
+            </div>
+        <% } %>
+
         <form action="LoginServlet" method="post">
             <!-- ②ログインID -->
             <input type="text" name="id" id="id" maxlength="20" placeholder="半角でご入力ください" required pattern="^[a-zA-Z0-9]+$">
