@@ -23,20 +23,20 @@
         </style>
 
         <div class="main-content">
-            <h2>① メニュー</h2>
+            <h2> メニュー</h2>
             <div class="menu-grid">
                 <div class="menu-item student">
-                    <h3>② 学生管理</h3>
+                    <h3> 学生管理</h3>
                 </div>
                 <div class="menu-item grades">
-                    <h3>③ 成績管理</h3>
+                    <h3> 成績管理</h3>
                     <ul>
-                        <li>④ 成績登録</li>
-                        <li>⑤ 成績参照</li>
+                        <li> 成績登録</li>
+                        <li> 成績参照</li>
                     </ul>
                 </div>
                 <div class="menu-item subjects">
-                    <h3>⑥ 科目管理</h3>
+                    <h3> 科目管理</h3>
                 </div>
             </div>
         </div>

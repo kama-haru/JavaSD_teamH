@@ -84,7 +84,7 @@
         <c:choose>
             <c:when test="${not empty sessionScope.user}">
                 <span>${sessionScope.user.name} 様</span>
-                <a href="logout">ログアウト</a>
+                <a href="${pageContext.request.contextPath}/logout">ログアウト</a>
             </c:when>
         </c:choose>
     </div>
