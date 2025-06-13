@@ -8,6 +8,7 @@ public class Teacher implements Serializable {
 	private String name;
 	private String schoolCd;
 
+
 	public Teacher() {
 	}
 
@@ -49,4 +50,6 @@ public class Teacher implements Serializable {
 	public void setSchoolCd(String schoolCd) {
 		this.schoolCd = schoolCd;
 	}
+
+
 }

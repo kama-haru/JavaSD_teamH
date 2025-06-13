@@ -1,99 +1,59 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:if test="${not empty sessionScope.user}">
+    <c:redirect url="/main/index.jsp"/>
+</c:if>
+
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ログイン - 得点管理システム</title>
+    <title>ログイン</title>
     <style>
-        body {
-            font-family: sans-serif;
-            background-color: #f9f9f9;
-            text-align: center;
-        }
-        .login-container {
-            background-color: #ffffff;
-            border-radius: 10px;
-            padding: 30px;
-            margin: 80px auto;
-            width: 300px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .error-message {
-            color: red;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        input[type="checkbox"] {
-            margin-right: 5px;
-        }
-        input[type="submit"] {
-            background-color: #007bff;
-            color: white;
-            padding: 8px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-        .footer {
-            margin-top: 50px;
-            color: #aaa;
-            font-size: 0.8em;
-        }
+        .login-container { width: 400px; margin: 50px auto; padding: 20px; background-color: #fff; border: 1px solid #ddd; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .login-container h2 { text-align: center; background-color: #f0f0f0; padding: 10px; margin-top: 0; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        .form-group input { width: 95%; padding: 8px; }
+        .btn { display: block; width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; font-size: 16px; }
+        .error { color: red; text-align: center; margin-bottom: 15px; }
+        .show-password { font-size: 0.8em; }
     </style>
-    <script>
-        function togglePassword() {
-            var pwField = document.getElementById("password");
-            pwField.type = (pwField.type === "password") ? "text" : "password";
-        }
-    </script>
 </head>
 <body>
 
-    <!-- ①画面タイトル -->
-    <h2>ログイン</h2>
+    <c:import url="/menu.jsp"/>
 
     <div class="login-container">
-        <%-- エラーメッセージの表示 --%>
-        <%
-            String errorType = (String) request.getAttribute("errorType");
-            if ("LOGIN".equals(errorType)) {
-        %>
-            <div class="error-message">
-                ログインに失敗しました。IDまたはパスワードが正しくありません。
+        <h2> ログイン</h2>
+
+        <c:if test="${not empty error}">
+            <p class="error">${error}</p>
+        </c:if>
+
+        <form action="login" method="post">
+            <div class="form-group">
+                <label for="id">ID</label>
+                <input type="text" id="id" name="id" required>
             </div>
-        <% } %>
-
-        <form action="LoginServlet" method="post">
-            <!-- ②ログインID -->
-            <input type="text" name="id" id="id" maxlength="20" placeholder="半角でご入力ください" required pattern="^[a-zA-Z0-9]+$">
-
-            <!-- ③パスワード -->
-            <input type="password" name="password" id="password" maxlength="20" placeholder="20文字以内の半角英数字でご入力ください" required pattern="^[a-zA-Z0-9]+$">
-
-            <!-- ④⑤パスワード表示/非表示 -->
-            <input type="checkbox" id="chk_d_ps" onclick="togglePassword()">
-            <label for="chk_d_ps">パスワードを表示</label>
-
-            <!-- ⑥ログインボタン -->
-            <br><br>
-            <input type="submit" name="login" value="ログイン">
+            <div class="form-group">
+                <label for="password">パスワード</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group show-password">
+                <input type="checkbox" id="showPassword" onclick="togglePassword()">
+                <label for="showPassword">パスワードを表示</label>
+            </div>
+            <button type="submit" class="btn">ログイン</button>
         </form>
     </div>
 
-    <div class="footer">
-        © 2025 TIC<br>
-        大原学園
-    </div>
-
+    <script>
+        function togglePassword() {
+            const passwordField = document.getElementById("password");
+            passwordField.type = passwordField.type === "password" ? "text" : "password";
+        }
+    </script>
 </body>
 </html>
