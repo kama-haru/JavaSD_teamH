@@ -3,15 +3,15 @@
 
 <style>
     body {
-        font-family: Arial, sans-serif;
+        font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #f8f9fa;
+        background-color: #ffffff;
         padding-top: 80px;
         padding-bottom: 60px;
     }
     .header {
-        background-color: #e3f2fd;
+        background-color:#eaf2ff;
         color: black;
         padding: 20px;
         font-size: 24px;
@@ -27,6 +27,9 @@
         margin: 0;
         font-size: 24px;
     }
+    .header .user-info {
+            font-size: 14px;
+        }
     .header .user-info a {
         color: #007bff;
         margin-left: 15px;
@@ -52,12 +55,10 @@
     .sidebar {
         width: 200px;
         padding: 20px;
-        background-color: #f0f0f0;
-        /* Đảm bảo sidebar chiếm đủ chiều cao màn hình (trừ header và footer) */
         min-height: calc(100vh - 80px - 60px);
     }
-    .sidebar h3 {
-        margin-top: 0;
+    .sidebar .current a {
+            text-decoration: underline;
     }
     .sidebar ul {
         list-style-type: none;
@@ -68,7 +69,7 @@
     }
     .sidebar a {
         text-decoration: none;
-        color: #333;
+        color: #0066cc;
     }
     .main-content {
         flex-grow: 1;

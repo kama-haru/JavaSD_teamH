@@ -10,17 +10,19 @@
     <c:import url="/menu.jsp"/>
     <div class="container">
         <div class="sidebar">
-            <h3>メニュー</h3>
-            <ul>
-                <li><a href="#">学生管理</a></li>
+            <nav>
+                <ul>
+                    <li class="current"><a href="${pageContext.request.contextPath}/main/index.jsp">メニュー</a></li>
+                    <li class="current"><a href="#">学生管理</a></li>
                 <li>成績管理
                     <ul style="padding-left: 15px; margin-top: 5px;">
-                        <li><a href="#">成績登録</a></li>
-                        <li><a href="#">成績参照</a></li>
+                        <li class="current"><a href="#">成績登録</a></li>
+                        <li class="current"><a href="#">成績参照</a></li>
                     </ul>
                 </li>
-                <li><a href="#">科目管理</a></li>
-            </ul>
+                	<li class="current"><a href="#">科目管理</a></li>
+            	</ul>
+            </nav>
         </div>
         <div class="main-content">
             ${ param.body }
