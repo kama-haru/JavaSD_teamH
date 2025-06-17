@@ -1,19 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+            crossorigin="anonymous">
 <style>
     body {
         font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
         margin: 0;
         padding: 0;
         background-color: #ffffff;
-        padding-top: 80px;
+        padding-top: 80px ;
         padding-bottom: 60px;
     }
+
     .header {
         background-color:#eaf2ff;
         color: black;
-        padding: 20px;
+        padding: 20px 30px;
         font-size: 24px;
         display: flex;
         justify-content: space-between;
@@ -22,6 +30,8 @@
         top: 0;
         width: 100%;
         box-sizing: border-box;
+        z-index: 1000;
+        border-bottom: 1px solid #ccc;
     }
     .header h1 {
         margin: 0;
@@ -47,8 +57,11 @@
         width: 100%;
         bottom: 0;
         font-size: 0.9em;
-        z-index: 1000;
+		border-top: 1px solid #e0e0e0;
     }
+    .footer p {
+            margin: 2px 0;
+        }
     .container {
         display: flex;
     }
@@ -76,7 +89,8 @@
         padding: 20px;
     }
 </style>
-
+</head>
+<body>
 <div class="header">
     <div>
         <h1>得点管理システム</h1>
@@ -92,5 +106,8 @@
 </div>
 
 <div class="footer">
-    <p>© 2023 TIC 大原学園</p>
+    <p>© 2023 TIC</p>
+    <p>大原学園</p>
 </div>
+</body>
+</html>
