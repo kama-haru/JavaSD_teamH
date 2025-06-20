@@ -6,27 +6,17 @@
 	session.invalidate();
 %>
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<title>ログアウト</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-</head>
-<body>
+<c:import url="/base.jsp">
+    <c:param name="title" value="ログアウト" />
+    <c:param name="body">
 
-	<c:import url="/base.jsp" />
-
-	<div class="container mt-5">
-		<div class="mx-auto" style="max-width: 800px;">
-			<div class="bg-light p-3 mb-3">ログアウト</div>
-			<div class="alert alert-success text-center">ログアウトしました</div>
+        <div class="mx-auto" style="max-width: 800px;">
+            <div class="bg-light p-3 mb-3">ログアウト</div>
+            <div class="alert alert-success text-center">ログアウトしました</div>
 			<a href="${pageContext.request.contextPath}/accounts/login"
 				class="btn btn-link">ログイン</a>
 		</div>
-	</div>
 
-</body>
-</html>
+
+    </c:param>
+</c:import>

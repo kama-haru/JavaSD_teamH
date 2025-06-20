@@ -12,10 +12,13 @@
     <c:param name="title" value="ホーム" />
     <c:param name="body">
 
+
+            <!-- ① Thanh tiêu đề -->
             <div class="bg-light border p-2 ps-3 mb-4">
                 <span>メニュー</span>
             </div>
 
+            <!-- ② Hàng chứa 3 mục chức năng -->
             <div class="row g-4">
 
                 <!-- 学生管理 -->
@@ -42,6 +45,6 @@
                 </div>
 
             </div>
-
+        </div>
     </c:param>
 </c:import>
