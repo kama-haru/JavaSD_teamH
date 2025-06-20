@@ -10,49 +10,63 @@
 <head>
     <meta charset="UTF-8">
     <title>ログイン</title>
-    <style>
-        .login-container { width: 400px; margin: 50px auto; padding: 20px; background-color: #fff; border: 1px solid #ddd; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        .login-container h2 { text-align: center; background-color: #f0f0f0; padding: 10px; margin-top: 0; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; }
-        .form-group input { width: 95%; padding: 8px; }
-        .btn { display: block; width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; font-size: 16px; }
-        .error { color: red; text-align: center; margin-bottom: 15px; }
-        .show-password { font-size: 0.8em; }
-    </style>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 
-    <c:import url="/menu.jsp"/>
+    <c:import url="/base.jsp"/>
 
-    <div class="login-container">
-        <h2> ログイン</h2>
+    <div class="container mt-5">
+        <div class="card mx-auto shadow-sm" style="max-width: 500px;">
+            <div class="card-header text-center bg-light py-2">
+                <h2 class="fs-5 m-0">ログイン</h2> <!-- thu gọn phần tiêu đề -->
+            </div>
+            <div class="card-body p-3">
 
-        <c:if test="${not empty error}">
-            <p class="error">${error}</p>
-        </c:if>
+                <c:if test="${not empty error}">
+                    <div class="alert alert-danger text-center">${error}</div>
+                </c:if>
 
-        <form action="login" method="post">
-            <div class="form-group">
-                <label for="id">ID</label>
-                <input type="text" id="id" name="id" required>
+                <form action="login" method="post">
+
+                    <!-- ID -->
+                    <div class="form-floating mb-2">
+                        <input type="text" class="form-control" id="id" name="id" placeholder="ID" required>
+                        <label for="id">ID</label>
+                    </div>
+
+                    <!-- パスワード -->
+                    <div class="form-floating mb-2">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="パスワード" required>
+                        <label for="password">パスワード</label>
+                    </div>
+
+                    <div class="mb-3 text-center">
+                        <div class="form-check d-inline-block">
+                            <input class="form-check-input" type="checkbox" id="showPassword" onclick="togglePassword()">
+                            <label class="form-check-label small" for="showPassword">
+                                パスワードを表示
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary px-4 py-1 mx-auto w-50">ログイン</button>
+                    </div>
+                </form>
+
             </div>
-            <div class="form-group">
-                <label for="password">パスワード</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group show-password">
-                <input type="checkbox" id="showPassword" onclick="togglePassword()">
-                <label for="showPassword">パスワードを表示</label>
-            </div>
-            <button type="submit" class="btn">ログイン</button>
-        </form>
+        </div>
     </div>
 
     <script>
         function togglePassword() {
-            const passwordField = document.getElementById("password");
-            passwordField.type = passwordField.type === "password" ? "text" : "password";
+            const pw = document.getElementById("password");
+            pw.type = pw.type === "password" ? "text" : "password";
         }
     </script>
 </body>

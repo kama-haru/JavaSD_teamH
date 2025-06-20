@@ -11,34 +11,37 @@
 <c:import url="/base.jsp">
     <c:param name="title" value="ホーム" />
     <c:param name="body">
-        <style>
-            .main-content h2 { background-color: #f0f0f0; padding: 10px; margin-top: 0; }
-            .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-            .menu-item { padding: 20px; text-align: center; border-radius: 5px; }
-            .menu-item h3 { margin-top: 0; }
-            .menu-item ul { list-style: none; padding: 0; text-align: left; margin-top: 10px; }
-            .student { background-color: #f8d7da; }
-            .grades { background-color: #d4edda; }
-            .subjects { background-color: #d1c4e9; }
-        </style>
 
-        <div class="main-content">
-            <h2> メニュー</h2>
-            <div class="menu-grid">
-                <div class="menu-item student">
-                    <h3> 学生管理</h3>
-                </div>
-                <div class="menu-item grades">
-                    <h3> 成績管理</h3>
-                    <ul>
-                        <li> 成績登録</li>
-                        <li> 成績参照</li>
-                    </ul>
-                </div>
-                <div class="menu-item subjects">
-                    <h3> 科目管理</h3>
-                </div>
+            <div class="bg-light border p-2 ps-3 mb-4">
+                <span>メニュー</span>
             </div>
-        </div>
+
+            <div class="row g-4">
+
+                <!-- 学生管理 -->
+                <div class="col-md-4">
+                    <div class="p-4 rounded-3 shadow-sm h-100" style="background-color: #e6cccc;">
+                        <a href="${pageContext.request.contextPath}/student/student_list.jsp" class="fs-5 text-decoration-underline">学生管理</a>
+                    </div>
+                </div>
+
+                <!-- 成績管理 -->
+                <div class="col-md-4">
+                    <div class="p-4 rounded-3 shadow-sm h-100" style="background-color: #d9ead3;">
+                        <h5 class="fw-normal mb-3">成績管理</h5>
+                        <a href="#" class="fs-5 text-decoration-underline d-block mb-2">成績登録</a>
+                        <a href="#" class="fs-5 text-decoration-underline d-block">成績参照</a>
+                    </div>
+                </div>
+
+                <!-- 科目管理 -->
+                <div class="col-md-4">
+                    <div class="p-4 rounded-3 shadow-sm h-100" style="background-color: #d9d2e9;">
+                        <a href="#" class="fs-5 text-decoration-underline">科目管理</a>
+                    </div>
+                </div>
+
+            </div>
+
     </c:param>
 </c:import>
