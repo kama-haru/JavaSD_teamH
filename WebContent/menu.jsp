@@ -3,7 +3,7 @@
 
 <div>
     <nav>
-        <ul class="list-unstyled">
+        <ul class="list-unstyled ms-3">
 
             <!-- メニュー -->
             <li class="mb-2">
