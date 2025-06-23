@@ -1,12 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%
-    if (session.getAttribute("user") == null) {
-        response.sendRedirect("/accounts/login.jsp");
-        return;
-    }
-%>
+<c:if test="${empty sessionScope.user}">
+    <c:redirect url="/accounts/login.jsp"/>
+</c:if>
 
 <c:import url="/base.jsp">
     <c:param name="title" value="ホーム" />
