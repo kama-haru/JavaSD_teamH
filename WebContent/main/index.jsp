@@ -11,32 +11,32 @@
 
 
 
-            <div class="bg-light border p-2 ps-3 mb-4">
+            <div class="bg-light border p-2 ps-3 mb-4 me-3">
                 <span>メニュー</span>
             </div>
 
 
-            <div class="row g-4">
+            <div class="row g-4 justify-content-center me-3 ms-2">
 
                 <!-- 学生管理 -->
                 <div class="col-md-4">
-                    <div class="p-4 rounded-3 shadow-sm h-100" style="background-color: #e6cccc;">
+                    <div class="d-flex justify-content-center align-items-center p-4 rounded-3 shadow-sm h-100" style="background-color: #e6cccc;">
                         <a href="${pageContext.request.contextPath}/student/student_list.jsp" class="fs-5 text-decoration-underline">学生管理</a>
                     </div>
                 </div>
 
                 <!-- 成績管理 -->
                 <div class="col-md-4">
-                    <div class="p-4 rounded-3 shadow-sm h-100" style="background-color: #d9ead3;">
-                        <h5 class="fw-normal mb-3">成績管理</h5>
-                        <a href="#" class="fs-5 text-decoration-underline d-block mb-2">成績登録</a>
-                        <a href="#" class="fs-5 text-decoration-underline d-block">成績参照</a>
-                    </div>
+                    <div class="d-flex justify-content-center align-items-center flex-column text-center p-4 rounded-3 shadow-sm" style="background-color: #d9ead3; height: 150px;">
+                    <h5 class="fw-normal mb-1">成績管理</h5>
+                    <a href="#" class="fs-5 text-decoration-underline d-block mb-1">成績登録</a>
+                    <a href="#" class="fs-5 text-decoration-underline d-block">成績参照</a>
+                </div>
                 </div>
 
                 <!-- 科目管理 -->
                 <div class="col-md-4">
-                    <div class="p-4 rounded-3 shadow-sm h-100" style="background-color: #d9d2e9;">
+                    <div class="d-flex justify-content-center align-items-center p-4 rounded-3 shadow-sm h-100" style="background-color: #d9d2e9;">
                         <a href="#" class="fs-5 text-decoration-underline">科目管理</a>
                     </div>
                 </div>
