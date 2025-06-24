@@ -33,6 +33,7 @@ public class LoginController extends CommonServlet {
 
             if (teacher != null) {
                 session.setAttribute("user", teacher);
+                session.setAttribute("schoolCd", teacher.getSchoolCd()); // ← 重要！
                 resp.sendRedirect(req.getContextPath() + "/main/index.jsp");
             } else {
                 req.setAttribute("error", "IDまたはパスワードが正しくありません");
