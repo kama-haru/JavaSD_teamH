@@ -26,14 +26,28 @@ public class LoginController extends CommonServlet {
 
 
         TeacherDao dao = new TeacherDao();
-        Teacher teacher = dao.login(id, password);
 
-        if (teacher != null) {
-            session.setAttribute("user", teacher);
-            resp.sendRedirect(req.getContextPath() + "/main/index.jsp");
-        } else {
-            req.setAttribute("error", "IDまたはパスワードが正しくありません");
-            req.getRequestDispatcher("login.jsp").forward(req, resp);
+        try {
+            // Attempt login process
+            Teacher teacher = dao.login(id, password);
+
+            if (teacher != null) {
+                session.setAttribute("user", teacher);
+                resp.sendRedirect(req.getContextPath() + "/main/index.jsp");
+            } else {
+                req.setAttribute("error", "IDまたはパスワードが正しくありません");
+                req.getRequestDispatcher("login.jsp").forward(req, resp);
+            }
+
+        } catch (Exception e) {
+            // Log the error for server-related issues (like DB connection errors)
+            e.printStackTrace();
+
+            // Set a server error flag in the session to show the error page
+            session.setAttribute("serverError", true);
+
+            // Redirect to the error page if the server connection fails
+            resp.sendRedirect(req.getContextPath() + "/error.jsp");
         }
     }
 }

@@ -20,8 +20,8 @@
 <body class="container py-4 px-3">
 
     <header class="bg-primary-subtle border-bottom py-3 px-4 d-flex justify-content-between align-items-center mb-4">
-        <h1 class="fs-5 m-0">得点管理システム</h1>
-        <div class="user-info">
+        <h1 class="fs-2 m-0">得点管理システム</h1>
+        <div class="user-info mt-4">
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
                     <span>${sessionScope.user.name} 様</span>
