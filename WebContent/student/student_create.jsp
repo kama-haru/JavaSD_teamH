@@ -35,19 +35,18 @@
             </div>
             <div class="form-group">
                 <label for="no">学生番号</label>
-                <%-- ★★★ ここが修正箇所です ★★★ --%>
                 <input type="text" id="no" name="no" placeholder="学生番号を入力してください" required>
             </div>
             <div class="form-group">
                 <label for="name">氏名</label>
-                <%-- ★★★ ここが修正箇所です ★★★ --%>
                 <input type="text" id="name" name="name" placeholder="氏名を入力してください" required>
             </div>
             <div class="form-group">
                 <label for="classNum">クラス</label>
                 <select name="classNum" id="classNum">
-                    <c:forEach var="classNumItem" items="${classList}">
-                        <option value="${classNumItem}">${classNumItem}</option>
+                    <%-- ★ 修正箇所: ClassNumオブジェクトのプロパティにアクセスするよう修正 --%>
+                    <c:forEach var="classItem" items="${classList}">
+                        <option value="${classItem.classNum}">${classItem.classNum}</option>
                     </c:forEach>
                 </select>
             </div>

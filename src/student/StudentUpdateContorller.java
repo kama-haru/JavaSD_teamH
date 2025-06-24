@@ -14,7 +14,6 @@ import bean.Student;
 import dao.ClassNumDao;
 import dao.StudentDao;
 
-// クラス名はファイル名 "StudentUpdateContorller.java" に合わせています
 @WebServlet(urlPatterns = {"/student/update"})
 public class StudentUpdateContorller extends HttpServlet {
 
@@ -33,15 +32,16 @@ public class StudentUpdateContorller extends HttpServlet {
 
         try {
             Student student = studentDao.findByNo(studentNo);
+            // ★ 修正箇所: クラスの一覧も取得する
             List<ClassNum> classList = classNumDao.findAll(schoolCd);
 
             if (student != null) {
                 request.setAttribute("ent_year", student.getEntYear());
                 request.setAttribute("no", student.getNo());
                 request.setAttribute("name", student.getName());
-                request.setAttribute("num", student.getClassNum());
+                request.setAttribute("num", student.getClassNum()); // 現在のクラス
                 request.setAttribute("sj_attend", student.isAttend());
-                request.setAttribute("classList", classList);
+                request.setAttribute("classList", classList); // ★ 修正箇所: クラスの選択肢リストをセット
             } else {
                  request.setAttribute("error", "指定された学生情報が見つかりません。");
             }
@@ -81,12 +81,11 @@ public class StudentUpdateContorller extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "情報の更新に失敗しました。");
+            // エラー発生時は再度変更画面を表示するため、doGetを呼び出す
             doGet(request, response);
             return;
         }
 
-        // ★★★ 修正箇所 ★★★
-        // 処理完了後、完了画面表示用のURLにリダイレクトする
         response.sendRedirect(request.getContextPath() + "/student/update-execute");
     }
 }

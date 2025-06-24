@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,18 +22,14 @@ public class Student_Create_Controller extends HttpServlet {
             throws ServletException, IOException {
 
         String schoolCd = "S01";
-        ClassNumDao classNumDao = new ClassNumDao(); // 元に戻します
-        List<String> classList = null;
+        ClassNumDao classNumDao = new ClassNumDao();
+        // ★ 修正箇所: List<ClassNum> を使うように型を変更
+        List<ClassNum> classList = null;
         List<Integer> entYearList = new ArrayList<>();
 
         try {
-            // ★★★ データベースから読み込む元のコードに戻します ★★★
-            List<ClassNum> classNumObjects = classNumDao.findAll(schoolCd);
-            if (classNumObjects != null) {
-                classList = classNumObjects.stream()
-                                           .map(cn -> cn.getClassNum())
-                                           .collect(Collectors.toList());
-            }
+            // ★ 修正箇所: DBから取得したList<ClassNum>をそのまま使用する
+            classList = classNumDao.findAll(schoolCd);
 
             int currentYear = LocalDate.now().getYear();
             for (int i = 0; i < 10; i++) {

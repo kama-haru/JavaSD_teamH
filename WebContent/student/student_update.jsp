@@ -65,6 +65,7 @@
                 <label for="class_num">クラス</label>
                 <div class="input-area">
                     <select id="class_num" name="class_num">
+                        <%-- ★ 修正箇所: ループで選択肢を生成し、現在のクラスを選択済みにする --%>
                         <c:forEach var="classItem" items="${classList}">
                             <option value="${classItem.classNum}" <c:if test="${classItem.classNum == num}">selected</c:if>>
                                 ${classItem.classNum}
@@ -78,7 +79,7 @@
             <div class="form-row">
                 <label for="sj_attend">在学中</label>
                 <div class="input-area">
-                    <input type="checkbox" id="sj_attend" name="is_attend" <c:if test="${sj_attend}">checked</c:if>>
+                    <input type="checkbox" id="sj_attend" name="is_attend" value="true" <c:if test="${sj_attend}">checked</c:if>>
                 </div>
             </div>
 

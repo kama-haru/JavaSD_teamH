@@ -57,18 +57,11 @@
 </head>
 <body>
 <div class="container">
-    <!-- ページタイトルと新規登録リンク -->
     <div class="page-title-bar">
         <span>学生管理</span>
-        <%--
-            ★★★ ここが修正箇所です ★★★
-            「新規登録」ボタンのリンク先を、新規作成した StudentCreateController の
-            URLパターン (/student/create) に変更しました。
-        --%>
         <a href="${pageContext.request.contextPath}/student/create">新規登録</a>
     </div>
 
-    <!-- 検索フォーム -->
     <div class="panel search-panel">
         <form action="list" method="get" class="search-form">
             <div class="form-group">
@@ -84,8 +77,9 @@
                 <label for="f2">クラス</label>
                 <select name="classNum" id="f2">
                     <option value="">--------</option>
-                    <c:forEach var="classNumItem" items="${classNumOptions}">
-                        <option value="${classNumItem}" ${classNumValue == classNumItem ? 'selected' : ''}>${classNumItem}</option>
+                    <%-- ★ 修正箇所: ClassNumオブジェクトのプロパティにアクセスするよう修正 --%>
+                    <c:forEach var="classItem" items="${classNumOptions}">
+                        <option value="${classItem.classNum}" ${classNumValue == classItem.classNum ? 'selected' : ''}>${classItem.classNum}</option>
                     </c:forEach>
                 </select>
             </div>
@@ -94,17 +88,15 @@
                 <label for="f3">在学中</label>
             </div>
             <div>
-                <button type="submit" class="submit-button">fck</button>
+                <button type="submit" class="submit-button">絞込み</button>
             </div>
         </form>
     </div>
 
-    <!-- 検索結果件数 -->
     <div class="list-info">
         検索結果：${fn:length(studentList)}件
     </div>
 
-    <!-- 学生一覧テーブル -->
     <div class="panel list-panel">
         <table class="student-table">
             <thead>
