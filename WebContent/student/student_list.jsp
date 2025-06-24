@@ -9,50 +9,148 @@
 <style>
     body {
         font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-        background-color: #f4f4f4; margin: 0; padding: 20px; color: #333;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 20px;
+        color: #212529;
     }
+
     .container {
-        max-width: 960px; margin: 0 auto; background-color: #fff;
-        border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
+
     .page-title-bar {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 15px 25px; border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px 30px;
+        border-bottom: 1px solid #dee2e6;
+        background-color: #f0f2f5;
     }
-    .page-title-bar span { font-size: 20px; font-weight: bold; }
-    .page-title-bar a { font-size: 14px; color: #007bff; text-decoration: none; }
-    .page-title-bar a:hover { text-decoration: underline; }
-    .panel { padding: 20px 25px; }
-    .search-panel { background-color: #f8f9fa; border-bottom: 1px solid #e9ecef; }
-    .search-form { display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; }
-    .form-group { display: flex; flex-direction: column; }
-    .form-group label { font-size: 14px; margin-bottom: 6px; }
+    .page-title-bar span {
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .page-title-bar a {
+        font-size: 14px;
+        padding: 8px 16px;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+    .page-title-bar a:hover {
+        background-color: #0056b3;
+    }
+
+    .search-panel {
+        padding: 20px 30px;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .search-form {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+    .form-group label {
+        font-size: 12px;
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
     .form-group select {
-        width: 180px; padding: 8px 10px; border: 1px solid #ced4da;
-        border-radius: 4px; font-size: 14px;
+        width: 180px;
+        padding: 6px 10px;
+        font-size: 14px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background-color: #fff;
     }
-    .checkbox-group { display: flex; align-items: center; padding-bottom: 9px; }
-    .checkbox-group input[type="checkbox"] { margin-right: 6px; transform: scale(1.1); }
-    .checkbox-group label { font-size: 14px; }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+    }
+    .checkbox-group input[type="checkbox"] {
+        transform: scale(1.2);
+        margin-right: 6px;
+    }
+    .checkbox-group label {
+        font-size: 14px;
+    }
+
     .submit-button {
-        padding: 8px 24px; font-size: 14px; color: #fff; background-color: #6c757d;
-        border: 1px solid #6c757d; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;
+        padding: 8px 20px;
+        background-color: #343a40;
+        color: #fff;
+        border-radius: 4px;
+        border: none;
+        font-size: 14px;
+        cursor: pointer;
     }
-    .submit-button:hover { background-color: #5a6268; }
-    .list-info { padding: 15px 25px; font-size: 14px; color: #555; }
-    .list-panel { padding: 0 25px 25px 25px; }
-    .student-table { width: 100%; border-collapse: collapse; border: 1px solid #dee2e6; }
-    .student-table th, .student-table td {
-        border-bottom: 1px solid #dee2e6; padding: 12px; font-size: 14px; vertical-align: middle;
+    .submit-button:hover {
+        background-color: #23272b;
     }
-    .student-table th { background-color: #f8f9fa; font-weight: bold; text-align: center; }
-    .student-table td { text-align: center; }
-    .student-table th:nth-child(1), .student-table td:nth-child(1),
-    .student-table th:nth-child(3), .student-table td:nth-child(3) { text-align: left; }
-    .student-table tbody tr:hover { background-color: #f1f1f1; }
-    .student-table a { color: #007bff; text-decoration: none; }
-    .student-table a:hover { text-decoration: underline; }
-    .no-data-message { text-align: center; padding: 50px; color: #6c757d; }
+
+    .list-info {
+        padding: 10px 30px;
+        font-size: 13px;
+        color: #555;
+    }
+
+    .list-panel {
+        padding: 0 30px 30px 30px;
+    }
+    .student-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .student-table th,
+    .student-table td {
+        padding: 12px 10px;
+        font-size: 14px;
+        border-bottom: 1px solid #e0e0e0;
+        text-align: center;
+    }
+    .student-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #333;
+    }
+    .student-table th:nth-child(1),
+    .student-table td:nth-child(1),
+    .student-table th:nth-child(3),
+    .student-table td:nth-child(3) {
+        text-align: left;
+    }
+    .student-table td:nth-child(6) {
+        width: 60px;
+    }
+    .student-table tbody tr:hover {
+        background-color: #f1f3f5;
+    }
+    .student-table a {
+        color: #007bff;
+        font-weight: 500;
+        text-decoration: none;
+    }
+    .student-table a:hover {
+        text-decoration: underline;
+    }
+    .no-data-message {
+        padding: 40px;
+        text-align: center;
+        color: #999;
+    }
 </style>
 </head>
 <body>
@@ -63,7 +161,7 @@
     </div>
 
     <div class="panel search-panel">
-        <form action="list" method="get" class="search-form">
+        <form action="${pageContext.request.contextPath}/student/list" method="get" class="search-form">
             <div class="form-group">
                 <label for="f1">入学年度</label>
                 <select name="entYear" id="f1">
@@ -77,7 +175,6 @@
                 <label for="f2">クラス</label>
                 <select name="classNum" id="f2">
                     <option value="">--------</option>
-                    <%-- ★ 修正箇所: ClassNumオブジェクトのプロパティにアクセスするよう修正 --%>
                     <c:forEach var="classItem" items="${classNumOptions}">
                         <option value="${classItem.classNum}" ${classNumValue == classItem.classNum ? 'selected' : ''}>${classItem.classNum}</option>
                     </c:forEach>
@@ -125,7 +222,7 @@
                                     </c:choose>
                                 </td>
                                 <td>
-                                    <a href="update?no=${student.no}">変更</a>
+                                    <a href="${pageContext.request.contextPath}/student/update?no=${student.no}">変更</a>
                                 </td>
                             </tr>
                         </c:forEach>
