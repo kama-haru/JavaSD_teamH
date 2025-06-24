@@ -11,8 +11,8 @@
 
 
 
-            <div class="bg-light border p-2 ps-3 mb-4 me-3">
-                <span>メニュー</span>
+            <div class="bg-light border p-2 ps-3 mb-4">
+                <h2>メニュー</h2>
             </div>
 
 

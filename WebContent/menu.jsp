@@ -3,17 +3,17 @@
 
 <div>
     <nav>
-        <ul class="list-unstyled ms-3">
+        <ul class="list-unstyled ms-1">
 
             <!-- メニュー -->
             <li class="mb-2">
-                <a href="${pageContext.request.contextPath}/main/index.jsp"
+                <a href="${pageContext.request.contextPath}/main"
                    class="text-decoration-none d-block">メニュー</a>
             </li>
 
             <!-- 学生管理 -->
             <li class="mb-2">
-                <a href="${pageContext.request.contextPath}/student/student_list.jsp"
+                <a href="${pageContext.request.contextPath}/student/list"
                    class="text-decoration-none d-block">学生管理</a>
             </li>
 

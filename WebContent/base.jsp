@@ -31,16 +31,16 @@
         </div>
     </header>
 
-    <div class="row">
+    <div class="row ms-2">
         <c:choose>
             <c:when test="${not empty sessionScope.user}">
                 <div class="col-md-2">
                     <c:import url="/menu.jsp" />
                 </div>
-                <div class="col-md-1 d-flex justify-content-center">
+                <div class="col-auto d-flex justify-content-center">
                     <div style="width: 1px; background-color: rgba(0,0,0,0.1); height: 100%;"></div>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-9 me-auto ms-auto">
                     ${param.body}
                 </div>
             </c:when>
