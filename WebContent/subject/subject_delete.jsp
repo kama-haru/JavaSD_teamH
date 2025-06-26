@@ -9,11 +9,6 @@
 
 <h2 class="bg-light p-2 w-100">科目情報削除</h2>
 
-  <!-- エラーメッセージがある場合 -->
-  <c:if test="${not empty error}">
-    <div class="alert alert-danger">${error}</div>
-    <a href="subject_list.jsp" class="btn btn-secondary">戻る</a>
-  </c:if>
 
   <!-- 科目確認と削除ボタン -->
   <c:if test="${empty error}">
@@ -26,7 +21,7 @@
     </form>
   </c:if>
 <div style="margin-top: 100px; ">
-          <a href="${pageContext.request.contextPath}/subject/subject_list">戻る</a>
+          <a href="${pageContext.request.contextPath}/subject/list">戻る</a>
         </div>
 
 

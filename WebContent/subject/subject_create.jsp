@@ -40,7 +40,7 @@
                     <button type="submit" class="btn btn-primary">登録</button>
                 </div>
                 <div class="d-flex">
-                    <a href="${pageContext.request.contextPath}/subject/subject_list">戻る</a>
+                    <a href="${pageContext.request.contextPath}/subject/list">戻る</a>
                 </div>
 
             </form>

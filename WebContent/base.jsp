@@ -17,7 +17,7 @@
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
 </head>
-<body class="container py-4 px-3">
+<body class="container py-2 px-5">
 
     <header class="bg-primary-subtle border-bottom py-3 px-4 d-flex justify-content-between align-items-center mb-4">
         <h1 class="fs-2 m-0">得点管理システム</h1>

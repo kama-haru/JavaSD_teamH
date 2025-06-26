@@ -15,7 +15,7 @@
 
 <div style="margin-top: 120px; ">
   <a href="<%= request.getContextPath() %>/main/index.jsp" style="margin-right: 80px;">戻る</a>
-  <a href="${pageContext.request.contextPath}/subject/subject_list">科目一覧</a>
+  <a href="${pageContext.request.contextPath}/subject/list">科目一覧</a>
 </div>
   </div>
  </c:param>

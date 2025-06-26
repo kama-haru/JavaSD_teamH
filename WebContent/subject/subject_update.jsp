@@ -45,7 +45,7 @@
         </div>
 
         <div>
-          <a href="${pageContext.request.contextPath}/subject/subject_list">戻る</a>
+          <a href="${pageContext.request.contextPath}/subject/list">戻る</a>
         </div>
       </form>
     </div>

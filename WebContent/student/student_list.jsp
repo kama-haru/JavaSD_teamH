@@ -38,9 +38,9 @@
 					</c:forEach>
 				</select>
 			</div>
-			<div class="col-md-3 form-check mt-4">
+			<div class="col-md-3 form-check d-flex align-items-center mt-4">
 				<input class="form-check-input" type="checkbox" name="isAttend" id="f3" value="true" ${isAttendValue ? 'checked' : ''}>
-				<label class="form-check-label" for="f3">在学中</label>
+				<label class="form-check-label mb-0" for="f3">在学中</label>
 			</div>
 			<div class="col-md-3">
 				<button type="submit" class="btn btn-secondary">絞込み</button>

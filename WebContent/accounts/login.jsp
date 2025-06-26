@@ -17,7 +17,7 @@
                 <div class="card-body p-3">
 
                     <c:if test="${not empty error}">
-                        <div class="alert alert-danger text-center">${error}</div>
+                        <div class="alert text-center">${error}</div>
                     </c:if>
 
                     <form action="login" method="post">

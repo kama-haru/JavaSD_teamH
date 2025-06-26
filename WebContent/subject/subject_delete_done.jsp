@@ -13,7 +13,7 @@
     削除が完了しました
   </div>
   <div style="margin-top: 120px; ">
-<p><a href="subject_list">科目一覧</a></p>
+<p><a href="${pageContext.request.contextPath}/subject/list">科目一覧</a></p>
 </div>
  </c:param>
 </c:import>
