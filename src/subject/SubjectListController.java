@@ -11,7 +11,7 @@ import bean.Subject;
 import dao.SubjectDao;
 import tool.CommonServlet;
 
-@WebServlet(urlPatterns={"/subject/subject_list"})
+@WebServlet(urlPatterns={"/subject/list"})
 public class SubjectListController extends CommonServlet {
 
     @Override

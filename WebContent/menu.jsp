@@ -32,7 +32,7 @@
 
             <!-- 科目管理 -->
             <li class="mb-2">
-                <a href="#" class="text-decoration-none d-block">科目管理</a>
+                <a href="${pageContext.request.contextPath}/subject/list" class="text-decoration-none d-block">科目管理</a>
             </li>
 
         </ul>
