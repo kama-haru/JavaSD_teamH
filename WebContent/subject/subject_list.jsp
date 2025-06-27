@@ -14,9 +14,9 @@
 			<h2 class="bg-light p-2 w-100">科目一覧</h2>
 		</div>
 
-		<div style="text-align: right; margin-bottom: 10px;">
-			<a href="subject_create.jsp">新規登録</a>
-		</div>
+		<div class="text-end mb-3 mx-3">
+		<a href="${pageContext.request.contextPath}/subject/subject_create.jsp" class="text-primary text-decoration-underline">新規登録</a>
+	</div>
 
 		<table class="table">
 			<thead>
@@ -32,9 +32,9 @@
 					<tr>
 						<td>${subject.cd}</td>
 						<td>${subject.name}</td>
-						<td><a href="subject_update.jsp?cd=${subject.cd}">変更</a></td>
+						<td><a href="${pageContext.request.contextPath}/subject/subject_update.jsp?cd=${subject.cd}">変更</a></td>
 						<td><a
-							href="subject_delete.jsp?cd=${subject.cd}&name=${subject.name}">削除</a></td>
+							href="${pageContext.request.contextPath}/subject/subject_delete.jsp?cd=${subject.cd}&name=${subject.name}">削除</a></td>
 					</tr>
 				</c:forEach>
 			</tbody>

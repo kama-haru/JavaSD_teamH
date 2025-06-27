@@ -9,7 +9,9 @@
 <c:import url="/base.jsp">
 	<c:param name="body">
 
-		<h2 class="bg-light p-2 w-100">科目情報削除</h2>
+		<div class="bg-light border p-2 ps-3 mb-4">
+			<h2>科目情報削除</h2>
+		</div>
 
 		<c:if test="${not empty error}">
 			<div class="alert alert-danger">${error}</div>

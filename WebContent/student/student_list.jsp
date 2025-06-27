@@ -13,12 +13,12 @@
 	<div class="bg-light border p-2 ps-3 mb-4">
                 <h2 class="mb-0">学生管理</h2>
             </div>
-	<div class="text-end mb-3">
+	<div class="text-end mb-3 mx-3">
 		<a href="${pageContext.request.contextPath}/student/create" class="text-primary text-decoration-underline">新規登録</a>
 	</div>
 
 	<!-- Search Panel -->
-	<div class="border p-4 mb-4 bg-white">
+	<div class="border p-4 mb-4 bg-white mx-2">
 		<form action="${pageContext.request.contextPath}/student/list" method="get" class="row g-3 align-items-end">
 			<div class="col-md-3">
 				<label for="f1" class="form-label">入学年度</label>
@@ -38,11 +38,13 @@
 					</c:forEach>
 				</select>
 			</div>
-			<div class="col-md-3 form-check d-flex align-items-center mt-4">
+			<div class="col-md-3 d-flex justify-content-center align-items-center ">
+				<div  class="form-check mb-3">
 				<input class="form-check-input" type="checkbox" name="isAttend" id="f3" value="true" ${isAttendValue ? 'checked' : ''}>
 				<label class="form-check-label mb-0" for="f3">在学中</label>
+				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-3 mb-1">
 				<button type="submit" class="btn btn-secondary">絞込み</button>
 			</div>
 		</form>
@@ -56,7 +58,7 @@
 	<!-- Student Table -->
 	<div class="table-responsive">
 		<table class="table table-hover align-middle text-center">
-			<thead class="table-light">
+
 				<tr>
 					<th class="text-start">入学年度</th>
 					<th>学生番号</th>
@@ -65,7 +67,7 @@
 					<th>在学中</th>
 					<th></th>
 				</tr>
-			</thead>
+
 			<tbody>
 				<c:choose>
 					<c:when test="${not empty studentList}">

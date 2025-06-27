@@ -22,7 +22,10 @@
 <c:import url="/base.jsp">
   <c:param name="body">
     <div class="container">
-      <h2 class="bg-light p-2 fw-semibold">科目情報変更</h2>
+
+    <div class="bg-light border p-2 ps-3 mb-4">
+			<h2>科目情報変更</h2>
+		</div>
 
       <form action="${pageContext.request.contextPath}/subject/SubjectUpdateExecuteController" method="post">
 
