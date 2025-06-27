@@ -182,12 +182,21 @@ public class SubjectDao extends DAO {
     // 削除（例外処理あり）
     public boolean delete(String cd) {
         try (Connection con = getConnection()) {
-            String sql = "DELETE FROM SUBJECT WHERE CD = ?";
-            PreparedStatement st = con.prepareStatement(sql);
-            st.setString(1, cd);
-            int rows = st.executeUpdate();
-            st.close();
-            return rows > 0;
+            // 1. 先に TEST テーブルの関連レコードを削除
+            String deleteTestSql = "DELETE FROM TEST WHERE SUBJECT_CD = ?";
+            try (PreparedStatement st1 = con.prepareStatement(deleteTestSql)) {
+                st1.setString(1, cd);
+                st1.executeUpdate();
+            }
+
+            // 2. 次に SUBJECT テーブルのレコードを削除
+            String deleteSubjectSql = "DELETE FROM SUBJECT WHERE CD = ?";
+            try (PreparedStatement st2 = con.prepareStatement(deleteSubjectSql)) {
+                st2.setString(1, cd);
+                int rows = st2.executeUpdate();
+                return rows > 0;
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return false;
