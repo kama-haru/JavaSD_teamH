@@ -22,10 +22,10 @@
                 成績管理
                 <ul class="list-unstyled mt-2 ms-3">
                     <li class="mb-1">
-                        <a href="#" class="text-decoration-none d-block">成績登録</a>
+                        <a href="${pageContext.request.contextPath}/test/test_regist" class="text-decoration-none d-block">成績登録</a>
                     </li>
                     <li>
-                        <a href="#" class="text-decoration-none d-block">成績参照</a>
+                        <a href="${pageContext.request.contextPath}/test/list" class="text-decoration-none d-block">成績参照</a>
                     </li>
                 </ul>
             </li>

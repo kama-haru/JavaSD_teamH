@@ -109,7 +109,7 @@
                           <c:set var="point2" value="${list[j].point}" />
                         </c:otherwise>
                       </c:choose>
-                      <c:break />
+
                     </c:if>
                   </c:forEach>
                   ${point2}
