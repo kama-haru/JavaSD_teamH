@@ -1,32 +1,384 @@
 package dao;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
-import bean.TestListStudent;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
-public class TestDao extends DAO {
-    public TestListStudent getTestResult(String studentNo, String subjectCd, int testNo) throws Exception {
-        Connection conn = getConnection();
-        String query = "SELECT * FROM TEST WHERE STUDENT_NO = ? AND SUBJECT_CD = ? AND NO = ?";
-        PreparedStatement pstmt = conn.prepareStatement(query);
-        pstmt.setString(1, studentNo);
-        pstmt.setString(2, subjectCd);
-        pstmt.setInt(3, testNo);
-        ResultSet rs = pstmt.executeQuery();
+import bean.Subject;
+import bean.Test;
 
-        TestListStudent testResult = null;
-        if (rs.next()) {
-            testResult = new TestListStudent(
-                rs.getString("STUDENT_NO"),
-                rs.getString("SUBJECT_CD"),
-                rs.getString("SCHOOL_CD"),
-                rs.getInt("NO"),
-                rs.getInt("POINT"),
-                rs.getString("CLASS_NUM")
-            );
+public class TestDao {
+
+  private Connection getConnection() throws Exception {
+    InitialContext ic = new InitialContext();
+    DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/JavaSD");
+    return ds.getConnection();
+  }
+
+  public List<Test> getTestList(String entYear, String classNum, String subjectCd, int no) throws Exception {
+	  List<Test> list = new ArrayList<>();
+	  String sql = "SELECT t.STUDENT_NO, t.POINT, s.NAME AS STUDENT_NAME, s.ENT_YEAR, t.CLASS_NUM " +  // ← 修正
+	               "FROM TEST t JOIN STUDENT s ON t.STUDENT_NO = s.NO " +
+	               "WHERE s.ENT_YEAR = ? AND t.CLASS_NUM = ? AND t.SUBJECT_CD = ? AND t.NO = ? " +
+	               "ORDER BY t.STUDENT_NO";
+
+	  try (Connection con = getConnection();
+	       PreparedStatement st = con.prepareStatement(sql)) {
+
+	    st.setInt(1, Integer.parseInt(entYear));
+	    st.setString(2, classNum);
+	    st.setString(3, subjectCd);
+	    st.setInt(4, no);
+
+	    try (ResultSet rs = st.executeQuery()) {
+	      while (rs.next()) {
+	        Test test = new Test();
+	        test.setStudentNo(rs.getString("STUDENT_NO"));
+	        test.setPoint(rs.getInt("POINT"));
+	        test.setStudentName(rs.getString("STUDENT_NAME"));
+	        test.setEntYear(rs.getInt("ENT_YEAR"));
+	        test.setClassNum(rs.getString("CLASS_NUM"));  // ← 追加
+	        list.add(test);
+	      }
+	    }
+	  }
+
+	  return list;
+	}
+
+
+  public List<Test> selectStudentScores(String studentNo) throws Exception {
+	    List<Test> list = new ArrayList<>();
+
+	    String sql = "SELECT s.NAME AS SUBJECT_NAME, t.SUBJECT_CD, t.NO, t.POINT, st.NAME AS STUDENT_NAME " +
+	                 "FROM TEST t " +
+	                 "JOIN SUBJECT s ON t.SUBJECT_CD = s.CD " +
+	                 "JOIN STUDENT st ON t.STUDENT_NO = st.NO " +
+	                 "WHERE t.STUDENT_NO = ? " +
+	                 "ORDER BY t.NO, s.CD";
+
+	    try (Connection con = getConnection();
+	         PreparedStatement st = con.prepareStatement(sql)) {
+
+	        st.setString(1, studentNo);
+
+	        try (ResultSet rs = st.executeQuery()) {
+	            while (rs.next()) {
+	                Test test = new Test();
+	                test.setStudentNo(studentNo);
+	                test.setSubjectName(rs.getString("SUBJECT_NAME"));
+	                test.setSubjectCd(rs.getString("SUBJECT_CD")); // ✅ Add subjectCd
+	                test.setNo(rs.getInt("NO"));
+	                test.setPoint(rs.getInt("POINT"));
+	                test.setStudentName(rs.getString("STUDENT_NAME")); // ✅ Add studentName
+	                list.add(test);
+	            }
+	        }
+	    }
+
+	    return list;
+	}
+
+
+  // Used by subject-based search
+  public List<Test> selectBySubject(String subjectCd, int no) throws Exception {
+    List<Test> list = new ArrayList<>();
+
+    String sql = "SELECT t.STUDENT_NO, s.NAME AS STUDENT_NAME, t.POINT, s.CLASS_NUM, s.ENT_YEAR " +
+                 "FROM TEST t JOIN STUDENT s ON t.STUDENT_NO = s.NO " +
+                 "WHERE t.SUBJECT_CD = ? AND t.NO = ? " +
+                 "ORDER BY s.ENT_YEAR, s.CLASS_NUM, t.STUDENT_NO";
+
+    try (Connection con = getConnection();
+         PreparedStatement st = con.prepareStatement(sql)) {
+
+      st.setString(1, subjectCd);
+      st.setInt(2, no);
+
+      try (ResultSet rs = st.executeQuery()) {
+        while (rs.next()) {
+          Test test = new Test();
+          test.setStudentNo(rs.getString("STUDENT_NO"));
+          test.setStudentName(rs.getString("STUDENT_NAME"));
+          test.setPoint(rs.getInt("POINT"));
+          test.setClassNum(rs.getString("CLASS_NUM"));
+          test.setEntYear(rs.getInt("ENT_YEAR"));
+          list.add(test);
         }
-        conn.close();
-        return testResult;
+      }
     }
+
+    return list;
+  }
+  public List<Test> selectByEntYearClassSubject(int entYear, String classNum, String subjectCd) throws Exception {
+	  List<Test> list = new ArrayList<>();
+	  String sql = "SELECT t.STUDENT_NO, s.NAME AS STUDENT_NAME, s.ENT_YEAR, t.CLASS_NUM, sub.NAME AS SUBJECT_NAME, " +
+	               "MAX(CASE WHEN t.NO = 1 THEN t.POINT END) AS POINT1, " +
+	               "MAX(CASE WHEN t.NO = 2 THEN t.POINT END) AS POINT2 " +
+	               "FROM TEST t " +
+	               "JOIN STUDENT s ON t.STUDENT_NO = s.NO " +
+	               "JOIN SUBJECT sub ON t.SUBJECT_CD = sub.CD " +
+	               "WHERE s.ENT_YEAR = ? AND t.CLASS_NUM = ? AND t.SUBJECT_CD = ? " +
+	               "GROUP BY t.STUDENT_NO, s.NAME, s.ENT_YEAR, t.CLASS_NUM, sub.NAME " +
+	               "ORDER BY t.STUDENT_NO";
+
+	  try (Connection con = getConnection();
+	       PreparedStatement st = con.prepareStatement(sql)) {
+
+	    st.setInt(1, entYear);
+	    st.setString(2, classNum);
+	    st.setString(3, subjectCd);
+
+	    ResultSet rs = st.executeQuery();
+
+	    while (rs.next()) {
+	      Test t = new Test();
+	      t.setStudentNo(rs.getString("STUDENT_NO"));
+	      t.setStudentName(rs.getString("STUDENT_NAME"));
+	      t.setEntYear(rs.getInt("ENT_YEAR"));
+	      t.setClassNum(rs.getString("CLASS_NUM"));
+	      t.setSubjectName(rs.getString("SUBJECT_NAME")); // ✅ Set subject name
+	      t.setPoint1(rs.getInt("POINT1"));
+	      t.setPoint2(rs.getInt("POINT2"));
+	      list.add(t);
+	    }
+	  }
+	  return list;
+	}
+
+
+
+//2. 成績登録用：指定回数の点数取得
+public List<Test> selectByEntYearClassSubjectAndNo(int entYear, String classNum, String subjectCd, int no) throws Exception {
+   List<Test> list = new ArrayList<>();
+   String sql = "SELECT t.student_no, s.name AS student_name, s.ent_year, t.class_num, t.subject_cd, t.point " +
+                "FROM test t JOIN student s ON t.student_no = s.no " +
+                "WHERE s.ent_year = ? AND t.class_num = ? AND t.subject_cd = ? AND t.no = ?";
+
+   try (Connection con = getConnection();
+        PreparedStatement st = con.prepareStatement(sql)) {
+       st.setInt(1, entYear);
+       st.setString(2, classNum);
+       st.setString(3, subjectCd);
+       st.setInt(4, no);
+       ResultSet rs = st.executeQuery();
+       while (rs.next()) {
+           Test test = new Test();
+           test.setStudentNo(rs.getString("student_no"));
+           test.setStudentName(rs.getString("student_name"));
+           test.setEntYear(rs.getInt("ent_year"));
+           test.setClassNum(rs.getString("class_num"));
+           test.setSubjectCd(rs.getString("subject_cd"));
+           test.setPoint(rs.getInt("point"));
+           test.setNo(no);
+           list.add(test);
+       }
+   }
+   return list;
 }
+
+
+
+  // 成績保存（存在すれば更新、なければINSERT）
+  public void saveOrUpdate(Test test) throws Exception {
+    try (
+      Connection con = getConnection();
+      PreparedStatement st1 = con.prepareStatement(
+        "SELECT COUNT(*) FROM TEST WHERE STUDENT_NO=? AND SUBJECT_CD=? AND NO=?"
+      );
+      PreparedStatement st2 = con.prepareStatement(
+        "UPDATE TEST SET POINT=? WHERE STUDENT_NO=? AND SUBJECT_CD=? AND NO=?"
+      );
+      PreparedStatement st3 = con.prepareStatement(
+        "INSERT INTO TEST (STUDENT_NO, SUBJECT_CD, SCHOOL_CD, NO, POINT, CLASS_NUM) VALUES (?, ?, ?, ?, ?, ?)"
+      )
+    ) {
+      st1.setString(1, test.getStudentNo());
+      st1.setString(2, test.getSubjectCd());
+      st1.setInt(3, test.getNo());
+
+      ResultSet rs = st1.executeQuery();
+      rs.next();
+      int count = rs.getInt(1);
+
+      if (count > 0) {
+        st2.setInt(1, test.getPoint());
+        st2.setString(2, test.getStudentNo());
+        st2.setString(3, test.getSubjectCd());
+        st2.setInt(4, test.getNo());
+        st2.executeUpdate();
+      } else {
+        st3.setString(1, test.getStudentNo());
+        st3.setString(2, test.getSubjectCd());
+        st3.setString(3, test.getSchoolCd());
+        st3.setInt(4, test.getNo());
+        st3.setInt(5, test.getPoint());
+        st3.setString(6, test.getClassNum());
+        st3.executeUpdate();
+      }
+    }
+  }
+
+  // 成績削除
+  public void delete(int entYear, String classNum, String subjectCd, int no, String studentNo) throws Exception {
+    String sql = "DELETE FROM TEST WHERE STUDENT_NO = ? AND SUBJECT_CD = ? AND NO = ? AND CLASS_NUM = ? " +
+                 "AND SCHOOL_CD = (SELECT SCHOOL_CD FROM STUDENT WHERE NO = ? AND ENT_YEAR = ? AND CLASS_NUM = ?)";
+
+    try (Connection con = getConnection();
+         PreparedStatement st = con.prepareStatement(sql)) {
+
+      st.setString(1, studentNo);
+      st.setString(2, subjectCd);
+      st.setInt(3, no);
+      st.setString(4, classNum);
+      st.setString(5, studentNo);
+      st.setInt(6, entYear);
+      st.setString(7, classNum);
+
+      st.executeUpdate();
+    }
+  }
+
+  // 成績更新（個別）
+  public void updatePoint(int year, String classNum, String subjectCd, int no, String studentNo, int point) throws Exception {
+    String sql = "UPDATE TEST SET POINT = ? WHERE ENT_YEAR = ? AND CLASS_NUM = ? AND SUBJECT_CD = ? AND NO = ? AND STUDENT_NO = ?";
+
+    try (Connection conn = this.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+      stmt.setInt(1, point);
+      stmt.setInt(2, year);
+      stmt.setString(3, classNum);
+      stmt.setString(4, subjectCd);
+      stmt.setInt(5, no);
+      stmt.setString(6, studentNo);
+
+      stmt.executeUpdate();
+    }
+  }
+
+  // 入学年度リストを取得
+  public List<Integer> getEntYearList() throws Exception {
+    List<Integer> list = new ArrayList<>();
+    String sql = "SELECT DISTINCT ENT_YEAR FROM STUDENT ORDER BY ENT_YEAR DESC";
+
+    try (Connection con = getConnection();
+         PreparedStatement st = con.prepareStatement(sql);
+         ResultSet rs = st.executeQuery()) {
+
+      while (rs.next()) {
+        list.add(rs.getInt("ENT_YEAR"));
+      }
+    }
+    return list;
+  }
+
+  // クラス番号リストを取得
+  public List<String> getClassNumList() throws Exception {
+    List<String> list = new ArrayList<>();
+    String sql = "SELECT DISTINCT CLASS_NUM FROM CLASS_NUM ORDER BY CLASS_NUM";
+
+    try (Connection con = getConnection();
+         PreparedStatement st = con.prepareStatement(sql);
+         ResultSet rs = st.executeQuery()) {
+
+      while (rs.next()) {
+        list.add(rs.getString("CLASS_NUM"));
+      }
+    }
+    return list;
+  }
+
+  // 科目リストを取得
+  public List<Subject> getSubjectList() throws Exception {
+    List<Subject> list = new ArrayList<>();
+    String sql = "SELECT CD, NAME FROM SUBJECT ORDER BY CD";
+
+    try (Connection con = getConnection();
+         PreparedStatement st = con.prepareStatement(sql);
+         ResultSet rs = st.executeQuery()) {
+
+      while (rs.next()) {
+        Subject s = new Subject();
+        s.setCd(rs.getString("CD"));
+        s.setName(rs.getString("NAME"));
+        list.add(s);
+      }
+    }
+    return list;
+  }
+
+
+	public void saveOrUpdate(int year, String classNum, String subjectCd, int no, String studentNo, int point) throws Exception {
+	  try (Connection con = getConnection()) {
+	    // UPDATE first
+	    String updateSql = "UPDATE TEST SET point=? WHERE ent_year=? AND class_num=? AND subject_cd=? AND no=? AND student_no=?";
+	    PreparedStatement update = con.prepareStatement(updateSql);
+	    update.setInt(1, point);
+	    update.setInt(2, year);
+	    update.setString(3, classNum);
+	    update.setString(4, subjectCd);
+	    update.setInt(5, no);
+	    update.setString(6, studentNo);
+	    int count = update.executeUpdate();
+
+	    // If not found, INSERT
+	    if (count == 0) {
+	      String insertSql = "INSERT INTO TEST (ent_year, class_num, subject_cd, no, student_no, point) VALUES (?, ?, ?, ?, ?, ?)";
+	      PreparedStatement insert = con.prepareStatement(insertSql);
+	      insert.setInt(1, year);
+	      insert.setString(2, classNum);
+	      insert.setString(3, subjectCd);
+	      insert.setInt(4, no);
+	      insert.setString(5, studentNo);
+	      insert.setInt(6, point);
+	      insert.executeUpdate();
+	    }
+	  }
+	}
+
+
+	// 成績保存（UPDATE なければ INSERT）
+	public void saveOrUpdate(String classNum, String subjectCd, int no, String studentNo, int point) throws Exception {
+	  try (Connection con = getConnection()) {
+	    String updateSql = "UPDATE TEST SET POINT = ? WHERE CLASS_NUM = ? AND SUBJECT_CD = ? AND NO = ? AND STUDENT_NO = ?";
+	    PreparedStatement update = con.prepareStatement(updateSql);
+	    update.setInt(1, point);
+	    update.setString(2, classNum);
+	    update.setString(3, subjectCd);
+	    update.setInt(4, no);
+	    update.setString(5, studentNo);
+	    int count = update.executeUpdate();
+
+	    if (count == 0) {
+	      String insertSql = "INSERT INTO TEST (CLASS_NUM, SUBJECT_CD, NO, STUDENT_NO, POINT) VALUES (?, ?, ?, ?, ?)";
+	      PreparedStatement insert = con.prepareStatement(insertSql);
+	      insert.setString(1, classNum);
+	      insert.setString(2, subjectCd);
+	      insert.setInt(3, no);
+	      insert.setString(4, studentNo);
+	      insert.setInt(5, point);
+	      insert.executeUpdate();
+	    }
+	  }
+	}
+
+	// 成績削除（SCHOOL_CD や ENT_YEAR 条件は削除）
+	public void delete(String classNum, String subjectCd, int no, String studentNo) throws Exception {
+	  String sql = "DELETE FROM TEST WHERE CLASS_NUM = ? AND SUBJECT_CD = ? AND NO = ? AND STUDENT_NO = ?";
+	  try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql)) {
+	    st.setString(1, classNum);
+	    st.setString(2, subjectCd);
+	    st.setInt(3, no);
+	    st.setString(4, studentNo);
+	    st.executeUpdate();
+	  }
+	}
+
+}
+
