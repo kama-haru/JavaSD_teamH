@@ -1,7 +1,6 @@
 package student;
 
 import java.io.IOException;
-import java.io.PrintWriter; // PrintWriterをインポートします
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,78 +11,94 @@ import javax.servlet.http.HttpServletResponse;
 import bean.Student;
 import dao.StudentDao;
 
-@WebServlet(urlPatterns = {"/student/create-execute"})
+@WebServlet(urlPatterns = { "/student/create-execute" })
 public class StudentCreateExecuteController extends HttpServlet {
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        PrintWriter out = response.getWriter();
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
 
-        String schoolCd = "S01";
-        String no = request.getParameter("no");
-        String name = request.getParameter("name");
-        int entYear = Integer.parseInt(request.getParameter("entYear"));
-        String classNum = request.getParameter("classNum");
+		String schoolCd = "S01";
 
-        Student student = new Student();
-        student.setNo(no);
-        student.setName(name);
-        student.setEntYear(entYear);
-        student.setClassNum(classNum);
-        student.setAttend(true);
-        student.setSchoolCd(schoolCd);
+		String no = request.getParameter("no");
+		String name = request.getParameter("name");
 
-        StudentDao dao = new StudentDao();
+		int entYear = 0;
+		String entYearParam = request.getParameter("entYear");
+		if (entYearParam != null && !entYearParam.isEmpty()) {
+			try {
+				entYear = Integer.parseInt(entYearParam);
+			} catch (NumberFormatException e) {
 
-        try {
-            // データベースに保存を試みる
-            dao.save(student);
+			}
+		}
 
-            // ★★★ 成功した場合 ★★★
-            // ここまで来たら登録成功なので、完了画面を表示します。
-            request.getRequestDispatcher("/student/student_create_done.jsp").forward(request, response);
+		String classNum = request.getParameter("classNum");
 
-        } catch (Exception e) {
-            // ★★★ エラーが発生した場合 ★★★
-            e.printStackTrace(); // まず、コンソールに詳細なエラーを出力
+		StudentDao dao = new StudentDao();
 
-            // 表示するエラーメッセージを格納する変数
-            String errorMessage;
+		boolean hasError = false;
+		String noError = null;
+		String entYearError = null;
 
-            // ★★★ エラーの種類を判別 ★★★
-            // getCause()で根本的な原因を取得し、そのメッセージを分析します。
-            Throwable cause = e.getCause();
-            String causeMessage = (cause != null) ? cause.toString() : e.toString();
+		if (entYear == 0) {
+			entYearError = "入学年度を選択してください。";
+			hasError = true;
+		}
 
-            if (causeMessage.contains("Duplicate entry")) {
-                // 原因が「主キーの重複」の場合
-                errorMessage = "入力された学生番号「" + no + "」は既に使用されています。";
-            } else if (causeMessage.contains("cannot be null")) {
-                // 原因が「NULL制約違反」の場合 (例: 必須項目が空)
-                errorMessage = "必須項目が入力されていません。学生番号や氏名などを確認してください。";
-            } else if (causeMessage.contains("Communications link failure")) {
-                // 原因が「データベース接続エラー」の場合
-                errorMessage = "データベースに接続できませんでした。管理者に連絡してください。";
-            } else {
-                // その他の予期せぬエラーの場合
-                errorMessage = "予期せぬエラーが発生しました。詳細はコンソールのログを確認してください。";
-            }
+		try {
+			Student existing = dao.findByNo(no);
+			if (existing != null) {
+				noError = "学生番号が重複しています";
+				hasError = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			request.setAttribute("errorMessage", "データベースエラーが発生しました。");
+			hasError = true;
+		}
 
-            // ユーザー向けの簡単なエラー画面を直接表示します。
-            out.println("<html>");
-            out.println("<head><title>登録エラー</title></head>");
-            out.println("<body>");
-            out.println("<h2>学生情報の登録に失敗しました</h2>");
-            out.println("<p style='color:red;'>エラー理由：" + errorMessage + "</p>");
-            out.println("<p>入力内容を確認し、再度登録してください。</p>");
-            out.println("<br>");
-            out.println("<a href='../student/create'>登録画面に戻る</a>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
+		if (hasError) {
+
+			request.setAttribute("noError", noError);
+			request.setAttribute("entYearError", entYearError);
+
+			request.setAttribute("no", no);
+			request.setAttribute("name", name);
+			request.setAttribute("entYear", entYear);
+			request.setAttribute("classNum", classNum);
+
+			request.getRequestDispatcher("/student/create").forward(request, response);
+			return;
+		}
+
+		try {
+			Student student = new Student();
+			student.setNo(no);
+			student.setName(name);
+			student.setEntYear(entYear);
+			student.setClassNum(classNum);
+			student.setAttend(true);
+			student.setSchoolCd(schoolCd);
+
+			dao.save(student);
+
+			request.getRequestDispatcher("/student/student_create_done.jsp").forward(request, response);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			request.setAttribute("errorMessage", "予期せぬエラーが発生しました。詳細はログを確認してください。");
+
+			request.setAttribute("no", no);
+			request.setAttribute("name", name);
+			request.setAttribute("entYear", entYear);
+			request.setAttribute("classNum", classNum);
+
+			request.getRequestDispatcher("/student/create").forward(request, response);
+		}
+	}
 }

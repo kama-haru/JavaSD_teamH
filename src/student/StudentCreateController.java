@@ -46,4 +46,10 @@ public class StudentCreateController extends HttpServlet {
 
         request.getRequestDispatcher("/student/student_create.jsp").forward(request, response);
     }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
 }

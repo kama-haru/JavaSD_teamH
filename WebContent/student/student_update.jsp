@@ -21,34 +21,34 @@
     <form action="${pageContext.request.contextPath}/student/update" method="post">
 
         <!-- 入学年度 -->
-        <div class="mb-3 row">
-            <label class="col-sm-3 col-form-label">入学年度</label>
-            <div class="col-sm-9 pt-2">
-                <span>${ent_year}</span>
+        <div class="mb-2 row">
+            <label class="col-sm-3 col-form-label w-100">入学年度</label>
+            <div class="col-sm-9 pt-2 ms-3">
+                <text>${ent_year}</text>
             </div>
         </div>
 
         <!-- 学生番号 -->
-        <div class="mb-3 row">
-            <label class="col-sm-3 col-form-label">学生番号</label>
-            <div class="col-sm-9 pt-2">
+        <div class="mb-2 row">
+            <label class="col-sm-3 col-form-label w-100">学生番号</label>
+            <div class="col-sm-9 pt-2 ms-3">
                 <span>${no}</span>
                 <input type="hidden" name="no" value="${no}">
             </div>
         </div>
 
         <!-- 氏名 -->
-        <div class="mb-3 row">
-            <label for="name" class="col-sm-3 col-form-label">氏名</label>
-            <div class="col-sm-9">
+        <div class="mb-2 row">
+            <label for="name" class="col-sm-3 col-form-label w-100">氏名</label>
+            <div class="col-sm-12">
                 <input type="text" class="form-control" id="name" name="name" value="${name}" required maxlength="30">
             </div>
         </div>
 
         <!-- クラス -->
-        <div class="mb-3 row">
-            <label for="class_num" class="col-sm-3 col-form-label">クラス</label>
-            <div class="col-sm-9">
+        <div class="mb-2 row">
+            <label for="class_num" class="col-sm-3 col-form-label w-100">クラス</label>
+            <div class="col-sm-12">
                 <select class="form-select" id="class_num" name="class_num">
                     <c:forEach var="classItem" items="${classList}">
                         <option value="${classItem.classNum}" <c:if test="${classItem.classNum == num}">selected</c:if>>
@@ -61,7 +61,7 @@
 
         <!-- 在学中 -->
         <div class="mb-3 row">
-            <label class="col-sm-3 col-form-label" for="sj_attend">在学中</label>
+            <label class="col-sm-auto col-form-label" for="sj_attend">在学中</label>
             <div class="col-sm-9 d-flex align-items-center">
                 <input class="form-check-input" type="checkbox" id="sj_attend" name="is_attend" value="true" <c:if test="${sj_attend}">checked</c:if>>
             </div>
