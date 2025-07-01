@@ -15,7 +15,7 @@
 
 		<!-- 検索フォーム -->
 		<form action="test_regist" method="get" class="mb-4">
-			<div class="row g-3 align-items-center mb-3 border p-2 px-2 mx-auto">
+			<div class="row g-3 align-items-center mb-3 border p-2 px-2 mx-auto mt-2">
 
 				<div class="col-md-2">
 					<label class="form-label">入学年度</label> <select name="entYear"

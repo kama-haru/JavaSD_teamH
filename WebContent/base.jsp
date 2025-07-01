@@ -18,7 +18,7 @@
 	crossorigin="anonymous"></script>
 </head>
 <body class="container py-2 px-5">
-
+	<!-- header -->
 	<header
 		class="bg-primary-subtle border-bottom py-3 px-4 d-flex justify-content-between align-items-center mb-4">
 		<h1 class="fs-2 m-0">得点管理システム</h1>
@@ -32,17 +32,20 @@
 			</c:choose>
 		</div>
 	</header>
-
+	<!-- body -->
 	<div class="row ms-2">
 		<c:choose>
 			<c:when test="${not empty sessionScope.user}">
+				<!-- saiderbar -->
 				<div class="col-md-2">
 					<c:import url="/menu.jsp" />
 				</div>
+				<!-- 分けるのせん -->
 				<div class="col-auto d-flex justify-content-center">
 					<div
 						style="width: 1px; background-color: rgba(0, 0, 0, 0.1); height: 100%;"></div>
 				</div>
+				<!-- 内容 -->
 				<div class="col-md-9 me-auto ms-auto">${param.body}</div>
 			</c:when>
 			<c:otherwise>
@@ -51,6 +54,7 @@
 		</c:choose>
 	</div>
 
+	<!-- footer -->
 	<footer
 		class="bg-secondary-subtle border-top text-center py-3 px-4 mt-4">
 		<p class="mb-1">© 2023 TIC</p>

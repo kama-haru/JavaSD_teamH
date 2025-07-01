@@ -26,7 +26,7 @@
 					</c:forEach>
 				</select>
 				<c:if test="${not empty entYearError}">
-					<div class="text-warning small mt-1">${noError}</div>
+					<div class="text-warning small mt-1">${entYearError}</div>
 				</c:if>
 			</div>
 
