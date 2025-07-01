@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import bean.ClassNum;
 import dao.ClassNumDao;
@@ -21,14 +22,14 @@ public class StudentCreateController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String schoolCd = "S01";
+        HttpSession session = request.getSession();
+        String schoolCd = (String) session.getAttribute("schoolCd");
+
         ClassNumDao classNumDao = new ClassNumDao();
-        // ★ 修正箇所: List<ClassNum> を使うように型を変更
         List<ClassNum> classList = null;
         List<Integer> entYearList = new ArrayList<>();
 
         try {
-            // ★ 修正箇所: DBから取得したList<ClassNum>をそのまま使用する
             classList = classNumDao.findAll(schoolCd);
 
             int currentYear = LocalDate.now().getYear();

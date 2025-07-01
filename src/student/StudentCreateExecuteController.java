@@ -7,11 +7,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import bean.Student;
 import dao.StudentDao;
 
-@WebServlet(urlPatterns = { "/student/create-execute" })
+@WebServlet(urlPatterns = { "/student/create_execute" })
 public class StudentCreateExecuteController extends HttpServlet {
 
 	@Override
@@ -21,10 +22,12 @@ public class StudentCreateExecuteController extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
 
-		String schoolCd = "S01";
+		HttpSession session = request.getSession();
+		String schoolCd = (String) session.getAttribute("schoolCd");
 
 		String no = request.getParameter("no");
 		String name = request.getParameter("name");
+		String classNum = request.getParameter("classNum");
 
 		int entYear = 0;
 		String entYearParam = request.getParameter("entYear");
@@ -32,11 +35,9 @@ public class StudentCreateExecuteController extends HttpServlet {
 			try {
 				entYear = Integer.parseInt(entYearParam);
 			} catch (NumberFormatException e) {
-
+				// ignore, entYear will remain 0
 			}
 		}
-
-		String classNum = request.getParameter("classNum");
 
 		StudentDao dao = new StudentDao();
 
@@ -52,7 +53,7 @@ public class StudentCreateExecuteController extends HttpServlet {
 		try {
 			Student existing = dao.findByNo(no);
 			if (existing != null) {
-				noError = "学生番号が重複しています";
+				noError = "学生番号が重複しています。";
 				hasError = true;
 			}
 		} catch (Exception e) {
@@ -62,7 +63,6 @@ public class StudentCreateExecuteController extends HttpServlet {
 		}
 
 		if (hasError) {
-
 			request.setAttribute("noError", noError);
 			request.setAttribute("entYearError", entYearError);
 
@@ -90,7 +90,6 @@ public class StudentCreateExecuteController extends HttpServlet {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-
 			request.setAttribute("errorMessage", "予期せぬエラーが発生しました。詳細はログを確認してください。");
 
 			request.setAttribute("no", no);

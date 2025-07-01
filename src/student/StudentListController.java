@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import bean.ClassNum;
 import bean.Student;
@@ -22,24 +23,24 @@ public class StudentListController extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-        // Daoのインスタンス化
+
+        HttpSession session = request.getSession();
+        String schoolCd = (String) session.getAttribute("schoolCd"); // ★ 追加: ログイン中ユーザーの学校コードを取得
+
         StudentDao studentDao = new StudentDao();
-        ClassNumDao classNumDao = new ClassNumDao(); // ★ 修正箇所: ClassNumDaoをインスタンス化
+        ClassNumDao classNumDao = new ClassNumDao();
         List<Student> studentList = null;
         List<Integer> entYearOptions = new ArrayList<>();
-        List<ClassNum> classNumOptions = null; // ★ 修正箇所: 型をList<ClassNum>に変更
+        List<ClassNum> classNumOptions = null;
 
-        // リクエストパラメータを取得
         String entYearStr = request.getParameter("entYear");
         String classNum = request.getParameter("classNum");
         boolean isAttend = "true".equals(request.getParameter("isAttend"));
 
-        // 初期表示時（パラメータが何もない場合）は「在学中」をチェック済みにする
         if (entYearStr == null && classNum == null && request.getParameter("isAttend") == null) {
             isAttend = true;
         }
 
-        // 入学年度をint型に変換
         int entYear = 0;
         if (entYearStr != null && !entYearStr.isEmpty()) {
             try {
@@ -49,26 +50,21 @@ public class StudentListController extends HttpServlet {
             }
         }
 
-        // 学校コードは固定値として使用
-        String schoolCd = "S01";
-
         try {
-            // データベースから学生リストをフィルタリングして取得
+            // ★ 修正: 学校コードでフィルターされた学生を取得
             studentList = studentDao.filter(entYear, classNum, isAttend, schoolCd);
 
-            // ★ 修正箇所: クラスの選択肢をデータベースから取得
+            // ★ 修正: 学校コードでフィルターされたクラス一覧を取得
             classNumOptions = classNumDao.findAll(schoolCd);
 
-            // 入学年度の選択肢を作成（現在から過去10年分）
             int currentYear = LocalDate.now().getYear();
             for (int i = 0; i < 10; i++) {
                 entYearOptions.add(currentYear - i);
             }
 
-            // JSPに渡す値をリクエストスコープにセット
             request.setAttribute("studentList", studentList);
             request.setAttribute("entYearOptions", entYearOptions);
-            request.setAttribute("classNumOptions", classNumOptions); // DBから取得したリストをセット
+            request.setAttribute("classNumOptions", classNumOptions);
             request.setAttribute("entYearValue", entYearStr);
             request.setAttribute("classNumValue", classNum);
             request.setAttribute("isAttendValue", isAttend);
@@ -77,7 +73,6 @@ public class StudentListController extends HttpServlet {
             request.setAttribute("error", "データの取得中にエラーが発生しました。");
         }
 
-        // student_list.jspにフォワード
         request.getRequestDispatcher("/student/student_list.jsp").forward(request, response);
     }
 

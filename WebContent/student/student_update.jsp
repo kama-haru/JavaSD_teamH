@@ -18,7 +18,7 @@
         <div class="alert alert-danger text-center">${error}</div>
     </c:if>
 
-    <form action="${pageContext.request.contextPath}/student/update" method="post">
+    <form action="${pageContext.request.contextPath}/student/update_execute" method="post">
 
         <!-- 入学年度 -->
         <div class="mb-2 row">

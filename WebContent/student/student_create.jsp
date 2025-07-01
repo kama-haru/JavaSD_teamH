@@ -14,7 +14,7 @@
 		</div>
 
 		<form
-			action="${pageContext.request.contextPath}/student/create-execute"
+			action="${pageContext.request.contextPath}/student/create_execute"
 			method="post">
 			<div class="mb-3">
 				<label for="entYear" class="form-label">入学年度</label> <select

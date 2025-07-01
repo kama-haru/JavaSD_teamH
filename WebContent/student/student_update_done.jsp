@@ -1,27 +1,23 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:if test="${empty sessionScope.user}">
-	<c:redirect url="/accounts/login.jsp" />
-</c:if>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
 <c:import url="/base.jsp">
-	<c:param name="title" value="登録完了" />
-	<c:param name="body">
-		<div class="bg-light border p-2 ps-3 mb-4">
-			<h2>学生情報登録</h2>
-		</div>
+    <c:param name="body">
+<h2 class="bg-light p-2 w-100">学生情報更新</h2>
 
+<div class="container">
+  <div class="alert text-center rounded-0 m-0 py-1" role="alert" style="background-color: #5cbf80; color: black;">
+    更新が完了しました
+  </div>
 
-		<!-- ②完了メッセージ -->
-		<div class="alert alert-success fs-6" role="alert">変更が完了しました</div>
+<div style="margin-top: 120px; ">
 
-
-
-		<div class="d-flex gap-4">
-			<a href="${pageContext.request.contextPath}/student/list"
-				class="text-decoration-none text-primary">学生一覧へ戻る</a>
-		</div>
-	</c:param>
+  <a href="${pageContext.request.contextPath}/student/list">学生一覧</a>
+</div>
+  </div>
+ </c:param>
 </c:import>
+
