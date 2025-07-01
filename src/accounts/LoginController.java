@@ -11,44 +11,52 @@ import tool.CommonServlet;
 
 @WebServlet(urlPatterns = { "/accounts/login" })
 public class LoginController extends CommonServlet {
+	// GETリクエストでログイン画面を表示
+	@Override
+	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		// login.jsp にフォワード
+		req.getRequestDispatcher("login.jsp").forward(req, resp);
+	}
 
-    @Override
-    protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        req.getRequestDispatcher("login.jsp").forward(req, resp);
-    }
+	@Override
+	protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		// セッションを取得
+		HttpSession session = req.getSession();
 
-    @Override
-    protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        HttpSession session = req.getSession();
+		// リクエストパラメータからIDとパスワードを取得
+		String id = req.getParameter("id");
+		String password = req.getParameter("password");
 
-        String id = req.getParameter("id");
-        String password = req.getParameter("password");
+		// 教員DAOのインスタンスを生成
+		TeacherDao dao = new TeacherDao();
 
+		try {
+			// DAOを使ってログイン認証を実行
+			Teacher teacher = dao.login(id, password);
 
-        TeacherDao dao = new TeacherDao();
+			// ログイン成功時
+			if (teacher != null) {
+				session.setAttribute("user", teacher);
+				session.setAttribute("schoolCd", teacher.getSchoolCd()); // ←
+																			// 重要！
 
-        try {
-            // Attempt login process
-            Teacher teacher = dao.login(id, password);
+				// メインページへリダイレクト
+				resp.sendRedirect(req.getContextPath() + "/main/index.jsp");
+			} else {
+				// ログイン失敗時、エラーメッセージを設定し、再びログイン画面へ
+				req.setAttribute("error", "IDまたはパスワードが正しくありません");
+				req.getRequestDispatcher("login.jsp").forward(req, resp);
+			}
 
-            if (teacher != null) {
-                session.setAttribute("user", teacher);
-                session.setAttribute("schoolCd", teacher.getSchoolCd()); // ← 重要！
-                resp.sendRedirect(req.getContextPath() + "/main/index.jsp");
-            } else {
-                req.setAttribute("error", "IDまたはパスワードが正しくありません");
-                req.getRequestDispatcher("login.jsp").forward(req, resp);
-            }
+		} catch (Exception e) {
+			// 例外発生時（データベース接続エラーなど）、ログに出力
+			e.printStackTrace();
 
-        } catch (Exception e) {
-            // Log the error for server-related issues (like DB connection errors)
-            e.printStackTrace();
+			// セッションにサーバーエラーのフラグを設定
+			session.setAttribute("serverError", true);
 
-            // Set a server error flag in the session to show the error page
-            session.setAttribute("serverError", true);
-
-            // Redirect to the error page if the server connection fails
-            resp.sendRedirect(req.getContextPath() + "/error.jsp");
-        }
-    }
+			// エラーページにリダイレクト
+			resp.sendRedirect(req.getContextPath() + "/error.jsp");
+		}
+	}
 }
