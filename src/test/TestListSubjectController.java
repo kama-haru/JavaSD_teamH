@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import bean.Test;
 import dao.ClassNumDao;
@@ -19,15 +20,16 @@ public class TestListSubjectController extends CommonServlet {
   protected void post(HttpServletRequest req, HttpServletResponse res) throws Exception {
     req.setCharacterEncoding("UTF-8");
 
-    // 入力パラメータの取得
     String entYear = req.getParameter("entYear");
     String classNum = req.getParameter("classNum");
     String subjectCd = req.getParameter("subjectCd");
 
-    // セッションから学校コード取得
-    String schoolCd = (String) req.getSession().getAttribute("schoolCd");
+    // ★ Get schoolCd from session
+    HttpSession session = req.getSession();
+    String schoolCd = (String) session.getAttribute("schoolCd");
 
-    // 入力バリデーション
+    TestDao testDao = new TestDao();
+
     if (entYear == null || entYear.isEmpty() ||
         classNum == null || classNum.isEmpty() ||
         subjectCd == null || subjectCd.isEmpty()) {
@@ -35,7 +37,6 @@ public class TestListSubjectController extends CommonServlet {
       req.setAttribute("errorSubject", "入学年度、クラス、科目をすべて選択してください。");
 
     } else {
-      TestDao testDao = new TestDao();
       List<Test> list = testDao.selectByEntYearClassSubject(entYear, classNum, subjectCd, schoolCd);
 
       if (list.isEmpty()) {
@@ -46,8 +47,6 @@ public class TestListSubjectController extends CommonServlet {
       }
     }
 
-    // セレクトボックス再表示用データ
-    TestDao testDao = new TestDao();
     ClassNumDao classDao = new ClassNumDao();
     SubjectDao subjectDao = new SubjectDao();
 
@@ -55,18 +54,16 @@ public class TestListSubjectController extends CommonServlet {
     req.setAttribute("classNumList", classDao.getClassNumList());
     req.setAttribute("subjectList", subjectDao.getAllSubjects());
 
-    // 入力保持
     req.setAttribute("entYear", entYear);
     req.setAttribute("classNum", classNum);
     req.setAttribute("subjectCd", subjectCd);
 
-    // 転送
     req.getRequestDispatcher("/test/test_list.jsp").forward(req, res);
   }
 
-@Override
-protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-	// TODO 自動生成されたメソッド・スタブ
-	
+  @Override
+  protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    // not used
+  }
 }
-}
+

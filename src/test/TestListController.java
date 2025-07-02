@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import bean.Subject;
 import dao.ClassNumDao;
@@ -14,13 +15,16 @@ import dao.SubjectDao;
 import dao.TestDao;
 import tool.CommonServlet;
 
-@WebServlet("/test/list")
+@WebServlet("/test/test_list")
 public class TestListController extends CommonServlet {
 
   @Override
   protected void get(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
-      // 各リスト取得
+      // ★ Add: schoolCd from session
+      HttpSession session = request.getSession();
+      String schoolCd = (String) session.getAttribute("schoolCd");
+
       TestDao testDao = new TestDao();
       ClassNumDao classDao = new ClassNumDao();
       SubjectDao subjectDao = new SubjectDao();
@@ -29,7 +33,6 @@ public class TestListController extends CommonServlet {
       List<String> classNumList = classDao.getClassNumList();
       List<Subject> subjectList = subjectDao.getAllSubjects();
 
-      // JSPへ渡す
       request.setAttribute("entYearList", entYearList);
       request.setAttribute("classNumList", classNumList);
       request.setAttribute("subjectList", subjectList);
@@ -41,9 +44,9 @@ public class TestListController extends CommonServlet {
     }
   }
 
-  // POSTリクエストが来てもGETとして処理する（必要なければ削除可能）
   @Override
   protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
     get(req, resp);
   }
 }
+
