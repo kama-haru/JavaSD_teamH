@@ -56,8 +56,7 @@ public class StudentCreateExecuteController extends HttpServlet {
 		}
 
 		try {
-			// バリデーション：学生番号が既に存在するかチェック
-			Student existing = dao.findByNo(no);
+			Student existing = dao.findBySchoolCdAndNo(schoolCd, no);
 			if (existing != null) {
 				noError = "学生番号が重複しています。";
 				hasError = true;

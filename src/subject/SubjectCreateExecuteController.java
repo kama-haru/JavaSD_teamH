@@ -44,7 +44,7 @@ public class SubjectCreateExecuteController extends CommonServlet {
         // 重複チェック
         SubjectDao dao = new SubjectDao();
         if (dao.exists(schoolCd, cd.trim())) {
-            req.setAttribute("errorCd", "この科目コードは既に登録されています。");
+            req.setAttribute("errorCd", "科目コードが重複しています。");
             req.setAttribute("cd", cd);
             req.setAttribute("name", name);
             req.getRequestDispatcher("/subject/subject_create.jsp").forward(req, resp);
