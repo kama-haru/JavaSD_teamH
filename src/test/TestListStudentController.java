@@ -1,6 +1,7 @@
 package test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -14,31 +15,33 @@ import tool.CommonServlet;
 
 @WebServlet("/test/test_list_student")
 public class TestListStudentController extends CommonServlet {
-
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     try {
+      req.setCharacterEncoding("UTF-8");
       String studentNo = req.getParameter("studentNo");
 
       if (studentNo == null || studentNo.trim().isEmpty()) {
         req.setAttribute("errorStudent", "学生番号を入力してください。");
-        req.getRequestDispatcher("/test/test_list.jsp").forward(req, res);
-        return;
-      }
-
-      TestDao dao = new TestDao();
-      List<Test> list = dao.selectStudentScores(studentNo);
-
-      if (list.isEmpty()) {
-        req.setAttribute("message", "該当する成績が見つかりませんでした。");
       } else {
-        req.setAttribute("listStudent", list);
-        req.setAttribute("studentName", list.get(0).getStudentName());  // ✅ Add student's name
+        TestDao dao = new TestDao();
+        List<Test> list = dao.selectStudentScores(studentNo);
+        if (list.isEmpty()) {
+          req.setAttribute("message", "学生が存在しませんでした");
+        } else {
+          req.setAttribute("listStudent", list);
+          req.setAttribute("studentName", list.get(0).getStudentName());
+          req.setAttribute("studentNo", studentNo);
+        }
       }
 
-      req.setAttribute("studentNo", studentNo);  // retain input in the form
-      req.getRequestDispatcher("/test/test_list.jsp").forward(req, res);
+      // 科目情報に関するリストはセットしない（ここが重要）
+      // ただし、初期状態に戻すためには空リストを送るのが無難
+      req.setAttribute("entYearList", new ArrayList<>());
+      req.setAttribute("classNumList", new ArrayList<>());
+      req.setAttribute("subjectList", new ArrayList<>());
 
+      req.getRequestDispatcher("/test/test_list.jsp").forward(req, res);
     } catch (Exception e) {
       throw new ServletException(e);
     }

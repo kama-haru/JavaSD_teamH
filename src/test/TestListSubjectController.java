@@ -1,5 +1,7 @@
 package test;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -7,58 +9,39 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.Subject;
 import bean.Test;
-import dao.ClassNumDao;
-import dao.SubjectDao;
 import dao.TestDao;
 import tool.CommonServlet;
 
-@WebServlet("/test/test_list_subject")
+@WebServlet("/test/test_list_student")
 public class TestListSubjectController extends CommonServlet {
   @Override
-  protected void post(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     try {
-      request.setCharacterEncoding("UTF-8");
+      req.setCharacterEncoding("UTF-8");
+      String studentNo = req.getParameter("studentNo");
 
-      String entYearStr = request.getParameter("entYear");
-      String classNum = request.getParameter("classNum");
-      String subjectCd = request.getParameter("subjectCd");
-
-      if (entYearStr == null || entYearStr.isEmpty() ||
-          classNum == null || classNum.isEmpty() ||
-          subjectCd == null || subjectCd.isEmpty()) {
-        request.setAttribute("error", "入学年度とクラスと科目を選択してください。");
+      if (studentNo == null || studentNo.trim().isEmpty()) {
+        req.setAttribute("errorStudent", "学生番号を入力してください。");
       } else {
-        int entYear = Integer.parseInt(entYearStr);
-        TestDao testDao = new TestDao();
-        List<Test> listSubject = testDao.selectByEntYearClassSubject(entYear, classNum, subjectCd);
-        request.setAttribute("listSubject", listSubject);
-
-        if (listSubject == null || listSubject.isEmpty()) {
-          request.setAttribute("message", "学生情報が存在しませんでした。");
-        }
-
-        SubjectDao subjectDao = new SubjectDao();
-        for (Subject s : subjectDao.getAllSubjects()) {
-          if (s.getCd().equals(subjectCd)) {
-            request.setAttribute("subjectName", s.getName());
-            break;
-          }
+        TestDao dao = new TestDao();
+        List<Test> list = dao.selectStudentScores(studentNo);
+        if (list.isEmpty()) {
+          req.setAttribute("message", "学生が存在しませんでした");
+        } else {
+          req.setAttribute("listStudent", list);
+          req.setAttribute("studentName", list.get(0).getStudentName());
+          req.setAttribute("studentNo", studentNo);
         }
       }
 
-      TestDao testDao = new TestDao();
-      request.setAttribute("entYearList", testDao.getEntYearList());
-      request.setAttribute("classNumList", new ClassNumDao().getClassNumList());
-      request.setAttribute("subjectList", new SubjectDao().getAllSubjects());
+      // 科目情報に関するリストはセットしない（ここが重要）
+      // ただし、初期状態に戻すためには空リストを送るのが無難
+      req.setAttribute("entYearList", new ArrayList<>());
+      req.setAttribute("classNumList", new ArrayList<>());
+      req.setAttribute("subjectList", new ArrayList<>());
 
-      request.setAttribute("entYear", entYearStr);
-      request.setAttribute("classNum", classNum);
-      request.setAttribute("subjectCd", subjectCd);
-
-      request.getRequestDispatcher("/test/test_list.jsp").forward(request, response);
-
+      req.getRequestDispatcher("/test/test_list.jsp").forward(req, res);
     } catch (Exception e) {
       throw new ServletException(e);
     }
@@ -66,6 +49,12 @@ public class TestListSubjectController extends CommonServlet {
 
 @Override
 protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	// TODO 自動生成されたメソッド・スタブ
+
+}
+
+@Override
+protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 	// TODO 自動生成されたメソッド・スタブ
 
 }
