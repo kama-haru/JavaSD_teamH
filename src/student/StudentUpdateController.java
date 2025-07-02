@@ -119,6 +119,10 @@ public class StudentUpdateController extends HttpServlet {
             // DAOで更新処理を実行
             boolean success = dao.update(student);
             if (success) {
+
+                session.removeAttribute("updatedStudent");
+
+
                 // 更新成功なら完了画面へフォワード
                 request.getRequestDispatcher("/student/student_update_done.jsp").forward(request, response);
             } else {
