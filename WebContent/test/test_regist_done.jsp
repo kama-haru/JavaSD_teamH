@@ -12,7 +12,7 @@
   </div>
   <div style="margin-top: 120px; ">
 <p><a href="${pageContext.request.contextPath}/test/test_regist">戻る</a></p>
-<p><a href="${pageContext.request.contextPath}/test/list">成績参照</a></p>
+<p><a href="${pageContext.request.contextPath}/test/test_list">成績参照</a></p>
 </div>
 
  </c:param>
