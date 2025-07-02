@@ -25,7 +25,7 @@
                         <a href="${pageContext.request.contextPath}/test/test_regist" class="text-decoration-none d-block">成績登録</a>
                     </li>
                     <li>
-                        <a href="${pageContext.request.contextPath}/test/list" class="text-decoration-none d-block">成績参照</a>
+                        <a href="${pageContext.request.contextPath}/test/test_list" class="text-decoration-none d-block">成績参照</a>
                     </li>
                 </ul>
             </li>

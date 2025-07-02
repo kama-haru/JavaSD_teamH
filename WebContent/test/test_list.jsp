@@ -58,7 +58,7 @@
         </div>
 
         <c:if test="${not empty errorSubject}">
-          <div class="text-danger mt-2">${errorSubject}</div>
+          <div class="text-warning small mt-1">${errorSubject}</div>
         </c:if>
       </form>
 
@@ -82,7 +82,7 @@
         </div>
 
         <c:if test="${not empty errorStudent}">
-          <div class="text-danger mt-2">${errorStudent}</div>
+          <div class="text-warning small mt-1">${errorStudent}</div>
         </c:if>
       </form>
     </div>
@@ -130,7 +130,7 @@
 
     <!-- 学生別成績結果 -->
     <c:if test="${not empty listStudent}">
-  
+
       <c:if test="${not empty studentName}">
         <div class="mb-2">氏名：${studentName}（${studentNo}）</div>
       </c:if>
