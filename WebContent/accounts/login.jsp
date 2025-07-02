@@ -22,7 +22,7 @@
 						<div class="alert text-center">${error}</div>
 					</c:if>
 
-					<form action="login" method="post">
+					<form action="loginExecute" method="post">
 						<!-- ID -->
 						<div class="form-floating mb-2">
 							<input type="text" class="form-control" id="id" name="id"

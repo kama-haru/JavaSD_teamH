@@ -8,7 +8,7 @@
 
       <!-- メッセージ表示 -->
       <c:if test="${not empty message}">
-        <div class="alert alert-warning">${message}</div>
+        <div class="text-warning small mt-1">${message}</div>
       </c:if>
 
       <!-- 成績表示テーブル -->
