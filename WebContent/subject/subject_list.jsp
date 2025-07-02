@@ -10,13 +10,15 @@
 
 <c:import url="/base.jsp">
 	<c:param name="body">
-		<div class="bg-light border p-auto ps-3 mb-4">
-			<h2 class="bg-light p-2 w-100">科目一覧</h2>
+
+		<div class="bg-light border p-2 ps-3 mb-4">
+			<h2 class="mb-0">科目一覧</h2>
 		</div>
 
 		<div class="text-end mb-3 mx-3">
-		<a href="${pageContext.request.contextPath}/subject/subject_create.jsp" class="text-primary text-decoration-underline">新規登録</a>
-	</div>
+			<a href="${pageContext.request.contextPath}/subject/subject_create.jsp"
+				class="text-primary text-decoration-underline">新規登録</a>
+		</div>
 
 		<table class="table">
 			<thead>
@@ -32,7 +34,8 @@
 					<tr>
 						<td>${subject.cd}</td>
 						<td>${subject.name}</td>
-						<td><a href="${pageContext.request.contextPath}/subject/subject_update.jsp?cd=${subject.cd}">変更</a></td>
+						<td><a
+							href="${pageContext.request.contextPath}/subject/subject_update.jsp?cd=${subject.cd}">変更</a></td>
 						<td><a
 							href="${pageContext.request.contextPath}/subject/subject_delete.jsp?cd=${subject.cd}&name=${subject.name}">削除</a></td>
 					</tr>

@@ -12,7 +12,7 @@
 	<c:param name="body">
 		<!-- bodyの内容 -->
 		<div class="bg-light border p-2 ps-3 mb-4">
-			<h2>メニュー</h2>
+			<h2 class="mb-0">メニュー</h2>
 		</div>
 
 

@@ -9,8 +9,9 @@
 <c:import url="/base.jsp">
 	<c:param name="title" value="ホーム" />
 	<c:param name="body">
+
 		<div class="bg-light border p-2 ps-3 mb-4">
-			<h2>学生情報登録</h2>
+			<h2 class="mb-0">学生情報登録</h2>
 		</div>
 
 		<form
