@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import bean.Student;
 import dao.StudentDao;
 
+// URLパターン /student/update_execute にマッピング
 @WebServlet(urlPatterns = {"/student/update_execute"})
 public class StudentUpdateExecuteController extends HttpServlet {
 
@@ -23,6 +24,7 @@ public class StudentUpdateExecuteController extends HttpServlet {
         HttpSession session = request.getSession();
         String schoolCd = (String) session.getAttribute("schoolCd");
 
+        // フォームからパラメータを取得
         String no = request.getParameter("no");
         String name = request.getParameter("name");
         String classNum = request.getParameter("class_num");
@@ -31,20 +33,23 @@ public class StudentUpdateExecuteController extends HttpServlet {
         boolean hasError = false;
         String nameError = null;
 
-        // 入力チェック（例：名前は必須）
+        // 入力チェック（例：氏名が空でないか）
         if (name == null || name.trim().isEmpty()) {
             nameError = "氏名を入力してください。";
             hasError = true;
         }
 
+        // バリデーションエラーがあった場合
         if (hasError) {
-            // エラー時は入力値とエラーメッセージをセットして、編集画面に戻す
+            // エラーメッセージと入力値をリクエストスコープにセット
             request.setAttribute("nameError", nameError);
             request.setAttribute("no", no);
             request.setAttribute("name", name);
             request.setAttribute("num", classNum);
             request.setAttribute("sj_attend", isAttend);
 
+            // student_update.jspにフォワードしてエラー表示
+            // ※この場合、StudentUpdateControllerを経由しないため、クラスの選択肢などが再設定されない問題がある
             request.getRequestDispatcher("/student/student_update.jsp").forward(request, response);
             return;
         }
@@ -53,12 +58,14 @@ public class StudentUpdateExecuteController extends HttpServlet {
             StudentDao dao = new StudentDao();
             Student student = dao.findByNo(no);
 
+            // 更新対象の学生が存在するか、権限があるかチェック
             if (student == null || !schoolCd.equals(student.getSchoolCd())) {
                 request.setAttribute("error", "指定された学生情報が見つからないか、権限がありません。");
                 request.getRequestDispatcher("/student/student_update.jsp").forward(request, response);
                 return;
             }
 
+            // DB更新は行わず、更新用データをセッションに詰める
             HttpSession sess = request.getSession();
             Student updatedStudent = new Student();
             updatedStudent.setNo(no);
@@ -66,10 +73,10 @@ public class StudentUpdateExecuteController extends HttpServlet {
             updatedStudent.setClassNum(classNum);
             updatedStudent.setAttend(isAttend);
             updatedStudent.setSchoolCd(schoolCd);
-
             sess.setAttribute("updatedStudent", updatedStudent);
 
-
+            // StudentUpdateController(/student/update)へフォワードする
+            // 次のコントローラでは、セッションのupdatedStudentを見て処理を行う
 			request.getRequestDispatcher("/student/update").forward(request, response);
 
         } catch (Exception e) {

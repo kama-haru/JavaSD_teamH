@@ -13,69 +13,71 @@ import bean.ClassNum;
 
 public class ClassNumDao {
 
-	  private Connection getConnection() throws Exception {
-		    InitialContext ic = new InitialContext();
-		    DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/JavaSD");
-		    return ds.getConnection();
-		  }
+    // JNDIを使用してデータベース接続を取得するプライベートメソッド
+    private Connection getConnection() throws Exception {
+        InitialContext ic = new InitialContext();
+        // web.xmlやcontext.xmlで設定されたリソース名 "jdbc/JavaSD" を参照
+        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/JavaSD");
+        return ds.getConnection();
+    }
 
-		  // 全件取得（ClassNum型）
-		  public List<ClassNum> selectAll() throws Exception {
-		    List<ClassNum> list = new ArrayList<>();
-		    String sql = "SELECT SCHOOL_CD, CLASS_NUM FROM CLASS_NUM ORDER BY CLASS_NUM";
+    // CLASS_NUMテーブルから全てのクラス情報を取得する
+    public List<ClassNum> selectAll() throws Exception {
+        List<ClassNum> list = new ArrayList<>();
+        String sql = "SELECT SCHOOL_CD, CLASS_NUM FROM CLASS_NUM ORDER BY CLASS_NUM";
 
-		    try (Connection con = getConnection();
-		         PreparedStatement st = con.prepareStatement(sql);
-		         ResultSet rs = st.executeQuery()) {
+        // try-with-resources構文で、ConnectionとPreparedStatementが自動的にクローズされる
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(sql);
+             ResultSet rs = st.executeQuery()) {
 
-		      while (rs.next()) {
-		        ClassNum c = new ClassNum();
-		        c.setSchoolCd(rs.getString("SCHOOL_CD"));
-		        c.setClassNum(rs.getString("CLASS_NUM"));
-		        list.add(c);
-		      }
-		    }
+            // 結果セットをループして、1行ずつClassNumオブジェクトに変換
+            while (rs.next()) {
+                ClassNum c = new ClassNum();
+                c.setSchoolCd(rs.getString("SCHOOL_CD"));
+                c.setClassNum(rs.getString("CLASS_NUM"));
+                list.add(c); // リストに追加
+            }
+        }
+        return list;
+    }
 
-		    return list;
-		  }
+    // クラス番号(CLASS_NUM)のみを文字列のリストとして取得する
+    public List<String> getClassNumList() throws Exception {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT CLASS_NUM FROM CLASS_NUM ORDER BY CLASS_NUM";
 
-		  // クラス番号だけの一覧（文字列型）
-		  public List<String> getClassNumList() throws Exception {
-		    List<String> list = new ArrayList<>();
-		    String sql = "SELECT DISTINCT CLASS_NUM FROM CLASS_NUM ORDER BY CLASS_NUM";
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(sql);
+             ResultSet rs = st.executeQuery()) {
 
-		    try (Connection con = getConnection();
-		         PreparedStatement st = con.prepareStatement(sql);
-		         ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                list.add(rs.getString("CLASS_NUM"));
+            }
+        }
+        return list;
+    }
 
-		      while (rs.next()) {
-		        list.add(rs.getString("CLASS_NUM"));
-		      }
-		    }
+    // 指定された学校コード(schoolCd)に紐づくクラス情報の一覧を取得する
+    public List<ClassNum> findAll(String schoolCd) throws Exception {
+        List<ClassNum> list = new ArrayList<>();
+        String sql = "SELECT * FROM CLASS_NUM WHERE SCHOOL_CD = ?";
 
-		    return list;
-		  }
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
 
-		  // 学校コードに該当するクラス一覧を取得
-		  public List<ClassNum> findAll(String schoolCd) throws Exception {
-		    List<ClassNum> list = new ArrayList<>();
-		    String sql = "SELECT * FROM CLASS_NUM WHERE SCHOOL_CD = ?";
+            // SQLのプレースホルダ '?' に値をセット
+            st.setString(1, schoolCd);
 
-		    try (Connection con = getConnection();
-		         PreparedStatement st = con.prepareStatement(sql)) {
-
-		      st.setString(1, schoolCd);
-
-		      try (ResultSet rs = st.executeQuery()) {
-		        while (rs.next()) {
-		          ClassNum c = new ClassNum();
-		          c.setSchoolCd(rs.getString("SCHOOL_CD"));
-		          c.setClassNum(rs.getString("CLASS_NUM"));
-		          list.add(c);
-		        }
-		      }
-		    }
-
-		    return list;
-		  }
-		}
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    ClassNum c = new ClassNum();
+                    c.setSchoolCd(rs.getString("SCHOOL_CD"));
+                    c.setClassNum(rs.getString("CLASS_NUM"));
+                    list.add(c);
+                }
+            }
+        }
+        return list;
+    }
+}
