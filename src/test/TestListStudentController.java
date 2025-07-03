@@ -1,7 +1,9 @@
 package test;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,35 +17,52 @@ import tool.CommonServlet;
 public class TestListStudentController extends CommonServlet {
 
   @Override
-  protected void post(HttpServletRequest req, HttpServletResponse res) throws Exception {
-    req.setCharacterEncoding("UTF-8");
-    String studentNo = req.getParameter("studentNo");
+  protected void get(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    try {
+      HttpSession session = request.getSession();
+      String schoolCd = (String) session.getAttribute("schoolCd");
 
-    // ★ Add (if needed): Get schoolCd for DAO that filters per school
-    HttpSession session = req.getSession();
-    String schoolCd = (String) session.getAttribute("schoolCd");
+      String studentNo = request.getParameter("studentNo");
 
-    if (studentNo == null || studentNo.trim().isEmpty()) {
-      req.setAttribute("errorStudent", "学生番号を入力してください。");
-    } else {
-      TestDao dao = new TestDao();
-      List<Test> list = dao.selectStudentScores(studentNo); // ← No schoolCd here, OK
-
-      if (list.isEmpty()) {
-        req.setAttribute("message", "該当する成績が見つかりませんでした。");
+      if (studentNo == null || studentNo.trim().isEmpty()) {
+        request.setAttribute("errorMessage", "学生番号を入力してください。");
       } else {
-        req.setAttribute("listStudent", list);
-        req.setAttribute("studentName", list.get(0).getStudentName());
+        TestDao dao = new TestDao();
+        List<Test> list = dao.selectStudentScores(studentNo, schoolCd);
+        request.setAttribute("studentResults", list);
+
+        if (!list.isEmpty()) {
+          request.setAttribute("studentName", list.get(0).getStudentName());
+          request.setAttribute("studentNo", studentNo);
+
+          boolean hasPoint = false;
+          for (Test t : list) {
+            if (t.getPoint() != null && t.getPoint() > 0) {
+              hasPoint = true;
+              break;
+            }
+          }
+
+          if (!hasPoint) {
+            request.setAttribute("errorMessage", "成績情報が存在しませんでした。");
+          }
+
+        } else {
+          request.setAttribute("errorMessage", "学生が存在しませんでした。");
+        }
       }
+
+      request.setAttribute("mode", "student");
+      request.getRequestDispatcher("/test/test_list.jsp").forward(request, response);
+
+    } catch (Exception e) {
+      throw new ServletException(e);
     }
-
-    req.setAttribute("studentNo", studentNo);
-    req.getRequestDispatcher("/test/test_list.jsp").forward(req, res);
   }
 
-  @Override
-  protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-    // not used
-  }
+@Override
+protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	// TODO 自動生成されたメソッド・スタブ
+	
 }
-
+}

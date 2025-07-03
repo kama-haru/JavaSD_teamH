@@ -1,69 +1,72 @@
 package test;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import bean.Subject;
 import bean.Test;
-import dao.ClassNumDao;
 import dao.SubjectDao;
 import dao.TestDao;
 import tool.CommonServlet;
 
 @WebServlet("/test/test_list_subject")
 public class TestListSubjectController extends CommonServlet {
-
   @Override
-  protected void post(HttpServletRequest req, HttpServletResponse res) throws Exception {
-    req.setCharacterEncoding("UTF-8");
+  protected void get(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    try {
+      HttpSession session = request.getSession();
+      String schoolCd = (String) session.getAttribute("schoolCd");
 
-    String entYear = req.getParameter("entYear");
-    String classNum = req.getParameter("classNum");
-    String subjectCd = req.getParameter("subjectCd");
+      String entYear = request.getParameter("entYear");
+      String classNum = request.getParameter("classNum");
+      String subjectCd = request.getParameter("subjectCd");
 
-    // ★ Get schoolCd from session
-    HttpSession session = req.getSession();
-    String schoolCd = (String) session.getAttribute("schoolCd");
-
-    TestDao testDao = new TestDao();
-
-    if (entYear == null || entYear.isEmpty() ||
-        classNum == null || classNum.isEmpty() ||
-        subjectCd == null || subjectCd.isEmpty()) {
-
-      req.setAttribute("errorSubject", "入学年度、クラス、科目をすべて選択してください。");
-
-    } else {
-      List<Test> list = testDao.selectByEntYearClassSubject(entYear, classNum, subjectCd, schoolCd);
-
-      if (list.isEmpty()) {
-        req.setAttribute("message", "成績データが見つかりませんでした。");
+      // パラメータの未入力チェック
+      if (entYear == null || classNum == null || subjectCd == null ||
+          entYear.isEmpty() || classNum.isEmpty() || subjectCd.isEmpty()) {
+        request.setAttribute("errorMessage", "すべての項目を選択してください。");
       } else {
-        req.setAttribute("listSubject", list);
-        req.setAttribute("subjectName", list.get(0).getSubjectName());
+        TestDao testDao = new TestDao();
+        List<Test> results = testDao.selectByEntYearClassSubject(entYear, classNum, subjectCd, schoolCd);
+
+        boolean hasScore = false;
+        for (Test t : results) {
+          Integer p1 = t.getPoint1();
+          Integer p2 = t.getPoint2();
+          if ((p1 != null && p1 > 0) || (p2 != null && p2 > 0)) {
+            hasScore = true;
+            break;
+          }
+        }
+
+        if (!hasScore) {
+          request.setAttribute("errorMessage", "科目情報が存在しませんでした。");
+        }
+
+        // 科目名取得
+        SubjectDao subjectDao = new SubjectDao();
+        Subject subject = subjectDao.select(subjectCd, schoolCd);
+
+        request.setAttribute("resultList", results); // <-- JSPと合わせるため修正
+        request.setAttribute("subjectName", subject != null ? subject.getName() : ""); // 科目名
       }
+
+      request.setAttribute("mode", "subject");
+      request.getRequestDispatcher("/test/test_list.jsp").forward(request, response);
+
+    } catch (Exception e) {
+      throw new ServletException(e);
     }
-
-    ClassNumDao classDao = new ClassNumDao();
-    SubjectDao subjectDao = new SubjectDao();
-
-    req.setAttribute("entYearList", testDao.getEntYearList());
-    req.setAttribute("classNumList", classDao.getClassNumList());
-    req.setAttribute("subjectList", subjectDao.getAllSubjects());
-
-    req.setAttribute("entYear", entYear);
-    req.setAttribute("classNum", classNum);
-    req.setAttribute("subjectCd", subjectCd);
-
-    req.getRequestDispatcher("/test/test_list.jsp").forward(req, res);
   }
 
   @Override
-  protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-    // not used
+  protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    // Not used
   }
 }
-

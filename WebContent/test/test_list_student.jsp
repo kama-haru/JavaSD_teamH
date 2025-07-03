@@ -1,43 +1,44 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<c:import url="/base.jsp">
-  <c:param name="body">
-    <div class="container mt-4">
-      <h2>学生別成績一覧</h2>
+<c:if test="${empty sessionScope.user}">
+  <c:redirect url="/accounts/login.jsp" />
+</c:if>
 
-      <!-- メッセージ -->
-      <c:if test="${not empty message}">
-        <div class="alert alert-warning">${message}</div>
-      </c:if>
+<h5 class="fw-bold mt-4">成績一覧（学生）</h5>
 
-      <!-- 結果表示 -->
-      <c:if test="${not empty testList}">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>氏名</th>
-              <th>科目名</th>
-              <th>科目コード</th>
-              <th>回数</th>
-              <th>点数</th>
-            </tr>
-          </thead>
-          <tbody>
-            <c:forEach var="t" items="${testList}">
-              <tr>
-                <td>${t.studentName}</td>
-                <td>${t.subjectName}</td>
-                <td>${t.subjectCd}</td>
-                <td>${t.no}</td>
-                <td>${t.point}</td>
-              </tr>
-            </c:forEach>
-          </tbody>
-        </table>
-      </c:if>
+<c:if test="${not empty studentName}">
+  <p>氏名：${studentName}（${studentNo}）</p>
+</c:if>
 
-      <a href="/test/test_list" class="btn btn-secondary">戻る</a>
-    </div>
-  </c:param>
-</c:import>
+<c:if test="${empty studentResults}">
+  <p class="text-muted">成績情報が見つかりませんでした。</p>
+</c:if>
+
+<c:if test="${not empty studentResults}">
+  <table class="table table-bordered text-center">
+    <thead class="table-light">
+      <tr>
+        <th>科目名</th>
+        <th>科目コード</th>
+        <th>回数</th>
+        <th>点数</th>
+      </tr>
+    </thead>
+    <tbody>
+      <c:forEach var="t" items="${studentResults}">
+        <tr>
+          <td>${t.subjectName}</td>
+          <td>${t.subjectCd}</td>
+          <td>${t.no}</td>
+          <td>
+            <c:choose>
+              <c:when test="${t.point == 0 || t.point == null}">-</c:when>
+              <c:otherwise>${t.point}</c:otherwise>
+            </c:choose>
+          </td>
+        </tr>
+      </c:forEach>
+    </tbody>
+  </table>
+</c:if>

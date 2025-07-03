@@ -1,51 +1,59 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:import url="/base.jsp">
-  <c:param name="body">
-    <div class="container mt-4">
-      <h2>科目別成績一覧</h2>
+<!-- ログインチェック -->
+<c:if test="${empty sessionScope.user}">
+  <c:redirect url="/accounts/login.jsp" />
+</c:if>
 
-      <!-- メッセージ表示 -->
-      <c:if test="${not empty message}">
-        <div class="text-warning small mt-1">${message}</div>
-      </c:if>
+<!-- 科目名 -->
+<c:if test="${not empty subjectName}">
+  <p class="fw-bold">科目名：${subjectName}</p>
+</c:if>
 
-      <!-- 成績表示テーブル -->
-      <c:if test="${not empty testList}">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>学生番号</th>
-              <th>氏名</th>
-              <th>1回目点数</th>
-              <th>2回目点数</th>
-            </tr>
-          </thead>
-          <tbody>
-            <c:forEach var="t" items="${testList}">
-              <tr>
-                <td>${t.studentNo}</td>
-                <td>${t.studentName}</td>
-                <td>
-                  <c:choose>
-                    <c:when test="${t.point1 != 0}">${t.point1}</c:when>
-                    <c:otherwise>－</c:otherwise>
-                  </c:choose>
-                </td>
-                <td>
-                  <c:choose>
-                    <c:when test="${t.point2 != 0}">${t.point2}</c:when>
-                    <c:otherwise>－</c:otherwise>
-                  </c:choose>
-                </td>
-              </tr>
-            </c:forEach>
-          </tbody>
-        </table>
-      </c:if>
+<!-- エラーメッセージ -->
+<c:if test="${not empty errorMessage}">
+  <div class="alert alert-warning">${errorMessage}</div>
+</c:if>
 
-      <a href="/test/test_list" class="btn btn-secondary">戻る</a>
-    </div>
-  </c:param>
-</c:import>
+<!-- 成績一覧（科目） -->
+<c:if test="${not empty resultList}">
+  <table class="table table-bordered table-sm">
+    <thead class="table-secondary text-center align-middle">
+      <tr>
+        <th>入学年度</th>
+        <th>クラス</th>
+        <th>学生番号</th>
+        <th>氏名</th>
+        <th>1回</th>
+        <th>2回</th>
+      </tr>
+    </thead>
+    <tbody>
+      <c:forEach var="test" items="${resultList}">
+        <tr>
+          <td class="text-center">${test.entYear}</td>
+          <td class="text-center">${test.classNum}</td> <!-- ✅ クラス名表示 -->
+          <td class="text-center">${test.studentNo}</td>
+          <td>${test.studentName}</td>
+          <td class="text-center">
+            <c:choose>
+              <c:when test="${test.point1 != null && test.point1 > 0}">
+                ${test.point1}
+              </c:when>
+              <c:otherwise>-</c:otherwise>
+            </c:choose>
+          </td>
+          <td class="text-center">
+            <c:choose>
+              <c:when test="${test.point2 != null && test.point2 > 0}">
+                ${test.point2}
+              </c:when>
+              <c:otherwise>-</c:otherwise>
+            </c:choose>
+          </td>
+        </tr>
+      </c:forEach>
+    </tbody>
+  </table>
+</c:if>

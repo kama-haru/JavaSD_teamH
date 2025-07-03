@@ -51,35 +51,37 @@ public class TestDao {
 		return list;
 	}
 
-	public List<Test> selectStudentScores(String studentNo) throws Exception {
-		List<Test> list = new ArrayList<>();
+	public List<Test> selectStudentScores(String studentNo, String schoolCd) throws Exception {
+	    List<Test> list = new ArrayList<>();
+	    String sql = "SELECT t.*, s.NAME AS STUDENT_NAME, sub.NAME AS SUBJECT_NAME " +
+	                 "FROM TEST t " +
+	                 "JOIN STUDENT s ON t.STUDENT_NO = s.NO " +
+	                 "JOIN SUBJECT sub ON t.SUBJECT_CD = sub.CD " +
+	                 "WHERE t.STUDENT_NO = ? AND s.SCHOOL_CD = ? " +
+	                 "ORDER BY t.NO";
 
-		String sql = "SELECT s.NAME AS SUBJECT_NAME, t.SUBJECT_CD, t.NO, t.POINT, st.NAME AS STUDENT_NAME "
-				+ "FROM TEST t " + "JOIN SUBJECT s ON t.SUBJECT_CD = s.CD " + "JOIN STUDENT st ON t.STUDENT_NO = st.NO "
-				+ "WHERE t.STUDENT_NO = ? " + "ORDER BY t.NO, s.CD";
+	    try (Connection con = getConnection();
+	         PreparedStatement st = con.prepareStatement(sql)) {
 
-		try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql)) {
+	        st.setString(1, studentNo);
+	        st.setString(2, schoolCd);
 
-			st.setString(1, studentNo);
-
-			try (ResultSet rs = st.executeQuery()) {
-				while (rs.next()) {
-					Test test = new Test();
-					test.setStudentNo(studentNo);
-					test.setSubjectName(rs.getString("SUBJECT_NAME"));
-					test.setSubjectCd(rs.getString("SUBJECT_CD")); // ✅ Add
-																	// subjectCd
-					test.setNo(rs.getInt("NO"));
-					test.setPoint(rs.getInt("POINT"));
-					test.setStudentName(rs.getString("STUDENT_NAME")); // ✅ Add
-																		// studentName
-					list.add(test);
-				}
-			}
-		}
-
-		return list;
+	        try (ResultSet rs = st.executeQuery()) {
+	            while (rs.next()) {
+	                Test t = new Test();
+	                t.setStudentNo(rs.getString("STUDENT_NO"));
+	                t.setSubjectCd(rs.getString("SUBJECT_CD"));
+	                t.setNo(rs.getInt("NO"));
+	                t.setPoint(rs.getInt("POINT"));
+	                t.setStudentName(rs.getString("STUDENT_NAME"));
+	                t.setSubjectName(rs.getString("SUBJECT_NAME"));
+	                list.add(t);
+	            }
+	        }
+	    }
+	    return list;
 	}
+
 
 	// Used by subject-based search
 	public List<Test> selectBySubject(String subjectCd, int no) throws Exception {
@@ -344,62 +346,69 @@ public class TestDao {
 		return list;
 	}
 
-	public List<Test> getStudentListForTestRegistration(String entYear, String classNum, String subjectCd)
-			throws Exception {
-		List<Test> list = new ArrayList<>();
-		String sql = "SELECT s.NO AS STUDENT_NO, s.NAME AS STUDENT_NAME, s.ENT_YEAR, s.CLASS_NUM, t.POINT "
-				+ "FROM STUDENT s LEFT JOIN TEST t ON s.NO = t.STUDENT_NO AND t.SUBJECT_CD = ? "
-				+ "WHERE s.ENT_YEAR = ? AND s.CLASS_NUM = ? ORDER BY s.NO";
-		try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql)) {
-			st.setString(1, subjectCd);
-			st.setInt(2, Integer.parseInt(entYear));
-			st.setString(3, classNum);
-			try (ResultSet rs = st.executeQuery()) {
-				while (rs.next()) {
-					Test test = new Test();
-					test.setStudentNo(rs.getString("STUDENT_NO"));
-					test.setStudentName(rs.getString("STUDENT_NAME"));
-					test.setEntYear(rs.getInt("ENT_YEAR"));
-					test.setClassNum(rs.getString("CLASS_NUM"));
-					test.setPoint(rs.getInt("POINT"));
-					list.add(test);
-				}
-			}
-		}
-		return list;
-	};
+	public List<Test> getStudentListForTestRegistration(String entYear, String classNum, String subjectCd) throws Exception {
+	    List<Test> list = new ArrayList<>();
+	    String sql = "SELECT s.NO AS STUDENT_NO, s.NAME AS STUDENT_NAME, s.ENT_YEAR, s.CLASS_NUM, t.POINT " +
+	                 "FROM STUDENT s " +
+	                 "LEFT JOIN TEST t ON s.NO = t.STUDENT_NO AND t.SUBJECT_CD = ? " +
+	                 "WHERE s.ENT_YEAR = ? AND s.CLASS_NUM = ? AND s.IS_ATTEND = TRUE " +
+	                 "ORDER BY s.NO";
 
-	public List<Test> selectByEntYearClassSubject(String entYear, String classNum, String subjectCd, String schoolCd)
-			throws Exception {
-		List<Test> list = new ArrayList<>();
-		String sql = "SELECT t.STUDENT_NO, s.NAME AS STUDENT_NAME, s.ENT_YEAR, t.CLASS_NUM, sub.NAME AS SUBJECT_NAME, "
-				+ "MAX(CASE WHEN t.NO = 1 THEN t.POINT END) AS POINT1, "
-				+ "MAX(CASE WHEN t.NO = 2 THEN t.POINT END) AS POINT2 " + "FROM TEST t "
-				+ "JOIN STUDENT s ON t.STUDENT_NO = s.NO " + "JOIN SUBJECT sub ON t.SUBJECT_CD = sub.CD "
-				+ "WHERE s.ENT_YEAR = ? AND t.CLASS_NUM = ? AND t.SUBJECT_CD = ? AND s.SCHOOL_CD = ? "
-				+ "GROUP BY t.STUDENT_NO, s.NAME, s.ENT_YEAR, t.CLASS_NUM, sub.NAME " + "ORDER BY t.STUDENT_NO";
+	    try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql)) {
+	        st.setString(1, subjectCd);
+	        st.setInt(2, Integer.parseInt(entYear));
+	        st.setString(3, classNum);
 
-		try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql)) {
-			st.setInt(1, Integer.parseInt(entYear));
-			st.setString(2, classNum);
-			st.setString(3, subjectCd);
-			st.setString(4, schoolCd);
+	        try (ResultSet rs = st.executeQuery()) {
+	            while (rs.next()) {
+	                Test test = new Test();
+	                test.setStudentNo(rs.getString("STUDENT_NO"));
+	                test.setStudentName(rs.getString("STUDENT_NAME"));
+	                test.setEntYear(rs.getInt("ENT_YEAR"));
+	                test.setClassNum(rs.getString("CLASS_NUM"));
+	                test.setPoint(rs.getInt("POINT"));
+	                list.add(test);
+	            }
+	        }
+	    }
 
-			try (ResultSet rs = st.executeQuery()) {
-				while (rs.next()) {
-					Test t = new Test();
-					t.setStudentNo(rs.getString("STUDENT_NO"));
-					t.setStudentName(rs.getString("STUDENT_NAME"));
-					t.setEntYear(rs.getInt("ENT_YEAR"));
-					t.setClassNum(rs.getString("CLASS_NUM"));
-					t.setSubjectName(rs.getString("SUBJECT_NAME"));
-					t.setPoint1(rs.getInt("POINT1"));
-					t.setPoint2(rs.getInt("POINT2"));
-					list.add(t);
-				}
-			}
-		}
-		return list;
+	    return list;
+	}
+
+	public List<Test> selectByEntYearClassSubject(String entYear, String classNum, String subjectCd, String schoolCd) throws Exception {
+	    List<Test> list = new ArrayList<>();
+	    String sql = "SELECT s.NO AS STUDENT_NO, s.NAME AS STUDENT_NAME, s.ENT_YEAR, " +
+	                 "COALESCE(t.CLASS_NUM, s.CLASS_NUM) AS CLASS_NUM, sub.NAME AS SUBJECT_NAME, " +
+	                 "MAX(CASE WHEN t.NO = 1 THEN t.POINT END) AS POINT1, " +
+	                 "MAX(CASE WHEN t.NO = 2 THEN t.POINT END) AS POINT2 " +
+	                 "FROM STUDENT s " +
+	                 "LEFT JOIN TEST t ON s.NO = t.STUDENT_NO AND t.SUBJECT_CD = ? " +
+	                 "LEFT JOIN SUBJECT sub ON t.SUBJECT_CD = sub.CD " +
+	                 "WHERE s.ENT_YEAR = ? AND s.CLASS_NUM = ? AND s.SCHOOL_CD = ? " +
+	                 "GROUP BY s.NO, s.NAME, s.ENT_YEAR, s.CLASS_NUM, sub.NAME " +
+	                 "ORDER BY s.NO";
+
+	    try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql)) {
+	        st.setString(1, subjectCd);
+	        st.setString(2, entYear);
+	        st.setString(3, classNum);
+	        st.setString(4, schoolCd);
+
+	        try (ResultSet rs = st.executeQuery()) {
+	            while (rs.next()) {
+	                Test t = new Test();
+	                t.setStudentNo(rs.getString("STUDENT_NO"));
+	                t.setStudentName(rs.getString("STUDENT_NAME"));
+	                t.setEntYear(rs.getInt("ENT_YEAR"));
+	                t.setClassNum(rs.getString("CLASS_NUM")); // now always available
+	                t.setSubjectName(rs.getString("SUBJECT_NAME"));
+	                t.setPoint1(rs.getInt("POINT1"));
+	                t.setPoint2(rs.getInt("POINT2"));
+	                list.add(t);
+	            }
+	        }
+	    }
+	    return list;
 	}
 
 	// 入学年度一覧を学校コードに応じて取得

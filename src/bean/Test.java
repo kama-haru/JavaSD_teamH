@@ -2,30 +2,22 @@ package bean;
 
 import java.io.Serializable;
 
-/**
- * Represents a single test record. This bean contains all fields needed
- * across the application, including joined data from Student and Subject tables.
- */
 public class Test implements Serializable {
 
-  // Fields primarily from the TEST table
   private String studentNo;
   private String subjectCd;
   private String schoolCd;
   private String classNum;
-  private int no;
-  private int point;
+  private Integer no;
+  private Integer point;
 
-  // Fields joined from other tables for display purposes
-  private String studentName; // From STUDENT table
-  private String subjectName; // From SUBJECT table
-  private int entYear;        // From STUDENT table
+  private String studentName;
+  private String subjectName;
+  private Integer entYear;
 
-  // Fields for the "科目別成績参照" (Subject-wise Grade Reference) screen
-  private int point1;
-  private int point2;
+  private Integer point1;
+  private Integer point2;
 
-  // A general-purpose name field (as seen in your original bean)
   private String name;
 
   // --- Getters and Setters ---
@@ -47,11 +39,11 @@ public class Test implements Serializable {
   }
 
   public String getName() {
-      return name;
+    return name;
   }
 
   public void setName(String name) {
-      this.name = name;
+    this.name = name;
   }
 
   public String getSubjectCd() {
@@ -86,43 +78,43 @@ public class Test implements Serializable {
     this.classNum = classNum;
   }
 
-  public int getPoint() {
+  public Integer getPoint() {
     return point;
   }
 
-  public void setPoint(int point) {
+  public void setPoint(Integer point) {
     this.point = point;
   }
 
-  public int getPoint1() {
+  public Integer getPoint1() {
     return point1;
   }
 
-  public void setPoint1(int point1) {
+  public void setPoint1(Integer point1) {
     this.point1 = point1;
   }
 
-  public int getPoint2() {
+  public Integer getPoint2() {
     return point2;
   }
 
-  public void setPoint2(int point2) {
+  public void setPoint2(Integer point2) {
     this.point2 = point2;
   }
 
-  public int getNo() {
+  public Integer getNo() {
     return no;
   }
 
-  public void setNo(int no) {
+  public void setNo(Integer no) {
     this.no = no;
   }
 
-  public int getEntYear() {
-      return entYear;
+  public Integer getEntYear() {
+    return entYear;
   }
 
-  public void setEntYear(int entYear) {
-      this.entYear = entYear;
+  public void setEntYear(Integer entYear) {
+    this.entYear = entYear;
   }
 }
