@@ -61,6 +61,7 @@ public class StudentCreateExecuteController extends HttpServlet {
 				noError = "学生番号が重複しています。";
 				hasError = true;
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("errorMessage", "データベースエラーが発生しました。");

@@ -159,6 +159,7 @@ public class StudentDao {
                 student.setSchoolCd(rs.getString("SCHOOL_CD"));
                 return student;
             }
+
             return null;
         }
     }
