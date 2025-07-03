@@ -139,4 +139,29 @@ public class StudentDao {
         }
         return list;
     }
+ // SCHOOL_CD と NO の組み合わせで学生を検索
+    public Student findBySchoolCdAndNo(String schoolCd, String no) throws Exception {
+        String sql = "SELECT * FROM STUDENT WHERE SCHOOL_CD = ? AND NO = ?";
+
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, schoolCd);
+            ps.setString(2, no);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Student student = new Student();
+                student.setNo(rs.getString("NO"));
+                student.setName(rs.getString("NAME"));
+                student.setEntYear(rs.getInt("ENT_YEAR"));
+                student.setClassNum(rs.getString("CLASS_NUM"));
+                student.setAttend(rs.getBoolean("IS_ATTEND"));
+                student.setSchoolCd(rs.getString("SCHOOL_CD"));
+                return student;
+            }
+
+            return null;
+        }
+    }
+
 }
