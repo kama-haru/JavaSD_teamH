@@ -17,76 +17,78 @@ import bean.Student;
 import dao.ClassNumDao;
 import dao.StudentDao;
 
-@WebServlet(urlPatterns = {"/student/list"})
+@WebServlet(urlPatterns = { "/student/list" })
 public class StudentListController extends HttpServlet {
 
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+	@Override
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
-        String schoolCd = (String) session.getAttribute("schoolCd");
+		// /student/list に対応するサーブレット
+		HttpSession session = request.getSession();
+		String schoolCd = (String) session.getAttribute("schoolCd");
 
-        StudentDao studentDao = new StudentDao();
-        ClassNumDao classNumDao = new ClassNumDao();
-        List<Student> studentList = null;
-        List<Integer> entYearOptions = new ArrayList<>();
-        List<ClassNum> classNumOptions = null;
+		// DAOクラスのインスタンスを生成
+		StudentDao studentDao = new StudentDao();
+		ClassNumDao classNumDao = new ClassNumDao();
+		// 学生リスト、入学年度オプション、クラスオプションの初期化
+		List<Student> studentList = null;
+		List<Integer> entYearOptions = new ArrayList<>();
+		List<ClassNum> classNumOptions = null;
 
-        String entYearStr = request.getParameter("entYear");
-        String classNum = request.getParameter("classNum");
-        boolean isAttend = "true".equals(request.getParameter("isAttend"));
+		// リクエストパラメータの取得（絞り込み条件）
+		String entYearStr = request.getParameter("entYear");
+		String classNum = request.getParameter("classNum");
+		boolean isAttend = "true".equals(request.getParameter("isAttend"));
+		// 「絞込み」ボタンが押されたかを判定するためのフラグ
+		boolean isFilterRequest = request.getParameter("filter") != null;
 
-        // ★★★ BẮT ĐẦU THÊM MÃ ★★★
-        // Kiểm tra xem nút "Lọc" có được nhấn không
-        boolean isFilterRequest = request.getParameter("filter") != null;
+		// 入学年度が未選択の場合、エラーメッセージを設定（ただし「絞込み」ボタンが押された場合のみ）
+		if (isFilterRequest && (entYearStr == null || entYearStr.isEmpty())) {
+			request.setAttribute("error_entYear", "入学年度を選択してください。");
+		}
 
-        // Nếu nút được nhấn và năm nhập học không được chọn, đặt thông báo lỗi.
-        // Logic xử lý chính vẫn sẽ tiếp tục như bình thường.
-        if (isFilterRequest && (entYearStr == null || entYearStr.isEmpty())) {
-            request.setAttribute("error_entYear", "入学年度を選択してください。");
-        }
-        // ★★★ KẾT THÚC THÊM MÃ ★★★
+		// 入学年度（文字列）を数値に変換
+		int entYear = 0;
+		if (entYearStr != null && !entYearStr.isEmpty()) {
+			try {
+				entYear = Integer.parseInt(entYearStr);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();// 数値変換エラー
+			}
+		}
 
-        int entYear = 0;
-        if (entYearStr != null && !entYearStr.isEmpty()) {
-            try {
-                entYear = Integer.parseInt(entYearStr);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
+		try {
+			// 絞り込み条件に基づいて学生リストを取得
+			studentList = studentDao.filter(entYear, classNum, isAttend, schoolCd);
 
-        try {
-            // Lời gọi đến DAO không thay đổi. Nếu entYear là 0, nó sẽ hoạt động
-            // giống như không lọc theo năm, đây chính là hành vi ban đầu.
-            studentList = studentDao.filter(entYear, classNum, isAttend, schoolCd);
+			// クラス番号の選択肢リストをDBから取得
+			classNumOptions = classNumDao.findAll(schoolCd);
+			// 過去10年間の入学年度オプションを生成
+			int currentYear = LocalDate.now().getYear();
+			for (int i = 0; i < 10; i++) {
+				entYearOptions.add(currentYear - i);
+			}
+			// JSPで使用するため、各データをリクエストスコープにセット
+			request.setAttribute("studentList", studentList);
+			request.setAttribute("entYearOptions", entYearOptions);
+			request.setAttribute("classNumOptions", classNumOptions);
 
-            classNumOptions = classNumDao.findAll(schoolCd);
+			// フォームに入力した値を保持するためにセット
+			request.setAttribute("entYearValue", entYearStr);
+			request.setAttribute("classNumValue", classNum);
+			request.setAttribute("isAttendValue", isAttend);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// データ取得エラーが発生した場合のエラーメッセージ
+			request.setAttribute("error", "データの取得中にエラーが発生しました。");
+		}
 
-            int currentYear = LocalDate.now().getYear();
-            for (int i = 0; i < 10; i++) {
-                entYearOptions.add(currentYear - i);
-            }
+		// JSPページへフォワード（画面表示）
+		request.getRequestDispatcher("/student/STDM001.jsp").forward(request, response);
+	}
 
-            request.setAttribute("studentList", studentList);
-            request.setAttribute("entYearOptions", entYearOptions);
-            request.setAttribute("classNumOptions", classNumOptions);
-
-            request.setAttribute("entYearValue", entYearStr);
-            request.setAttribute("classNumValue", classNum);
-            request.setAttribute("isAttendValue", isAttend);
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "データの取得中にエラーが発生しました。");
-        }
-
-        request.getRequestDispatcher("/student/STDM001.jsp").forward(request, response);
-    }
-
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-        doGet(request, response);
-    }
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
 }
