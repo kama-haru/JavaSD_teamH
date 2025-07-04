@@ -27,37 +27,43 @@ public class TestListSubjectController extends CommonServlet {
       String classNum = request.getParameter("classNum");
       String subjectCd = request.getParameter("subjectCd");
 
-      // パラメータの未入力チェック
+      request.setAttribute("mode", "subject");
+
+      // 入力チェック：いずれか1つでも空ならエラー
       if (entYear == null || classNum == null || subjectCd == null ||
           entYear.isEmpty() || classNum.isEmpty() || subjectCd.isEmpty()) {
-        request.setAttribute("errorMessage", "すべての項目を選択してください。");
-      } else {
-        TestDao testDao = new TestDao();
-        List<Test> results = testDao.selectByEntYearClassSubject(entYear, classNum, subjectCd, schoolCd);
-
-        boolean hasScore = false;
-        for (Test t : results) {
-          Integer p1 = t.getPoint1();
-          Integer p2 = t.getPoint2();
-          if ((p1 != null && p1 > 0) || (p2 != null && p2 > 0)) {
-            hasScore = true;
-            break;
-          }
-        }
-
-        if (!hasScore) {
-          request.setAttribute("errorMessage", "科目情報が存在しませんでした。");
-        }
-
-        // 科目名取得
-        SubjectDao subjectDao = new SubjectDao();
-        Subject subject = subjectDao.select(subjectCd, schoolCd);
-
-        request.setAttribute("resultList", results); // <-- JSPと合わせるため修正
-        request.setAttribute("subjectName", subject != null ? subject.getName() : ""); // 科目名
+        request.setAttribute("error", "入学年度とクラスと科目を選択してください。");
+        request.getRequestDispatcher("/test/test_list.jsp").forward(request, response);
+        return;
       }
 
-      request.setAttribute("mode", "subject");
+      // 成績検索
+      TestDao testDao = new TestDao();
+      List<Test> results = testDao.selectByEntYearClassSubject(entYear, classNum, subjectCd, schoolCd);
+
+      // 成績がすべて null または 0 の場合はエラー
+      boolean hasScore = false;
+      for (Test t : results) {
+        Integer p1 = t.getPoint1();
+        Integer p2 = t.getPoint2();
+        if ((p1 != null && p1 > 0) || (p2 != null && p2 > 0)) {
+          hasScore = true;
+          break;
+        }
+      }
+
+      if (!hasScore) {
+        request.setAttribute("error", "科目情報が存在しませんでした。");
+      }
+
+      // 科目名取得
+      SubjectDao subjectDao = new SubjectDao();
+      Subject subject = subjectDao.select(subjectCd, schoolCd);
+
+      // ✅ JSTL に空文字ではなく null を渡すことで表示制御を正しくする
+      request.setAttribute("subjectName", subject != null ? subject.getName() : null);
+
+      request.setAttribute("resultList", results);
       request.getRequestDispatcher("/test/test_list.jsp").forward(request, response);
 
     } catch (Exception e) {
@@ -67,6 +73,6 @@ public class TestListSubjectController extends CommonServlet {
 
   @Override
   protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-    // Not used
+    // POST は使用しない
   }
 }

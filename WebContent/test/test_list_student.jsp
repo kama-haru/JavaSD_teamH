@@ -16,8 +16,8 @@
 </c:if>
 
 <c:if test="${not empty studentResults}">
-  <table class="table table-bordered text-center">
-    <thead class="table-light">
+  <table class="table table-bordered text-center" style="background-color: transparent;">
+    <thead style="background-color: transparent;">
       <tr>
         <th>科目名</th>
         <th>科目コード</th>

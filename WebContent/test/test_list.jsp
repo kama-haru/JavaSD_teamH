@@ -13,13 +13,11 @@
         <h2 class="mb-0">成績参照</h2>
       </div>
 
-      <div class="card p-4 mb-4">
+      <div class="card p-4 mb-4" style="background-color: transparent;">
+        <!-- ■科目情報 -->
         <form action="test_list" method="get" class="mb-4">
-          <!-- ■科目情報 -->
           <div class="row g-3 align-items-center mb-2">
-            <div class="col-auto">
-              <div class="fw-bold">科目情報</div>
-            </div>
+            <div class="col-auto fw-bold">科目情報</div>
 
             <div class="col-auto">
               <label class="form-label mb-0">入学年度</label>
@@ -56,38 +54,64 @@
             </div>
           </div>
 
-          <!-- ■学生情報 -->
-          <div class="row g-3 align-items-center">
-            <div class="col-auto">
-              <div class="fw-bold">学生情報</div>
+          <!-- 科目情報エラー -->
+          <c:if test="${not empty errorSubject}">
+            <div class="text-danger small ms-3">
+              <i class="bi bi-exclamation-circle"></i> ${errorSubject}
             </div>
+          </c:if>
+        </form>
+
+        <!-- 🔻 薄い線（境界） -->
+        <hr style="border: 0; height: 1px; background-color: #ccc; margin: 0.5rem 0;" />
+
+        <!-- ■学生情報 -->
+        <form action="test_list" method="get">
+          <div class="row g-3 align-items-center">
+            <div class="col-auto fw-bold">学生情報</div>
 
             <div class="col-auto">
               <label class="form-label mb-0">学生番号</label>
-              <input type="text" name="studentNo" class="form-control form-control-sm" value="${param.studentNo}" style="width: 235px;" />
+              <input type="text" name="studentNo" class="form-control form-control-sm"
+                     value="${param.studentNo}" placeholder="学生番号を入力してください"
+                     style="width: 235px;" required />
             </div>
 
             <div class="col-auto">
               <button type="submit" name="mode" value="student" class="btn btn-secondary btn-sm">検索</button>
             </div>
           </div>
+
+          <!-- 学生情報エラー -->
+          <c:if test="${not empty errorStudent}">
+            <div class="text-danger small ms-3 mt-1">
+              <i class="bi bi-exclamation-circle"></i> ${errorStudent}
+            </div>
+          </c:if>
         </form>
 
-        <!-- エラーメッセージ -->
+        <!-- ✅ ガイドメッセージ（線の下に常に表示） -->
+        <p class="text-info small mt-3 ms-1">
+          科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
+        </p>
+
+        <!-- 共通エラーメッセージ -->
         <c:if test="${not empty errorMessage}">
-          <div class="text-warning small mt-1">${errorMessage}</div>
+          <div class="text-danger small ms-1 mt-3">
+            <i class="bi bi-exclamation-triangle"></i> ${errorMessage}
+          </div>
         </c:if>
       </div>
 
-      <!-- 結果表示 -->
+      <!-- 検索結果表示 -->
       <c:choose>
         <c:when test="${mode == 'subject'}">
-          <c:if test="${empty errorMessage}">
+          <c:if test="${not empty resultList}">
             <jsp:include page="test_list_subject.jsp" />
           </c:if>
         </c:when>
         <c:when test="${mode == 'student'}">
-          <c:if test="${empty errorMessage}">
+          <c:if test="${not empty studentResults}">
             <jsp:include page="test_list_student.jsp" />
           </c:if>
         </c:when>

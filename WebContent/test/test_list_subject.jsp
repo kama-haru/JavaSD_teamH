@@ -6,20 +6,25 @@
   <c:redirect url="/accounts/login.jsp" />
 </c:if>
 
-<!-- 科目名 -->
+<!-- 成績一覧（科目）見出し -->
+<h5 class="fw-bold mt-4">成績一覧（科目）</h5>
+
+<!-- 科目名表示 -->
 <c:if test="${not empty subjectName}">
-  <p class="fw-bold">科目名：${subjectName}</p>
+  <p class="fw-bold mb-2">科目名：${subjectName}</p>
 </c:if>
 
-<!-- エラーメッセージ -->
-<c:if test="${not empty errorMessage}">
-  <div class="alert alert-warning">${errorMessage}</div>
+<!-- エラーメッセージ表示（科目情報が存在しませんでした など） -->
+<c:if test="${not empty error}">
+  <div class="text-danger small mb-3 ms-1 border-top pt-2">
+    <i class="bi bi-exclamation-triangle"></i> ${error}
+  </div>
 </c:if>
 
-<!-- 成績一覧（科目） -->
+<!-- 成績結果表示 -->
 <c:if test="${not empty resultList}">
-  <table class="table table-bordered table-sm">
-    <thead class="table-secondary text-center align-middle">
+  <table class="table table-bordered table-sm" style="background-color: transparent;">
+    <thead class="text-center align-middle" style="background-color: transparent;">
       <tr>
         <th>入学年度</th>
         <th>クラス</th>
@@ -33,7 +38,7 @@
       <c:forEach var="test" items="${resultList}">
         <tr>
           <td class="text-center">${test.entYear}</td>
-          <td class="text-center">${test.classNum}</td> <!-- ✅ クラス名表示 -->
+          <td class="text-center">${test.classNum}</td>
           <td class="text-center">${test.studentNo}</td>
           <td>${test.studentName}</td>
           <td class="text-center">
