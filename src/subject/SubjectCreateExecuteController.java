@@ -37,7 +37,7 @@ public class SubjectCreateExecuteController extends CommonServlet {
         if (hasError) {
             req.setAttribute("cd", cd);
             req.setAttribute("name", name);
-            req.getRequestDispatcher("/subject/subject_create.jsp").forward(req, resp);
+            req.getRequestDispatcher("/subject/SBJM002.jsp").forward(req, resp);
             return;
         }
 
@@ -47,7 +47,7 @@ public class SubjectCreateExecuteController extends CommonServlet {
             req.setAttribute("errorCd", "科目コードが重複しています。");
             req.setAttribute("cd", cd);
             req.setAttribute("name", name);
-            req.getRequestDispatcher("/subject/subject_create.jsp").forward(req, resp);
+            req.getRequestDispatcher("/subject/SBJM002.jsp").forward(req, resp);
             return;
         }
 

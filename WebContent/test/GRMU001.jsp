@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <c:if test="${empty sessionScope.user}">
-  <c:redirect url="/accounts/login.jsp" />
+  <c:redirect url="/accounts/LOGI001.jsp" />
 </c:if>
 
 <c:import url="/base.jsp">
@@ -109,12 +109,12 @@
       <c:choose>
         <c:when test="${mode == 'subject'}">
           <c:if test="${not empty resultList}">
-            <jsp:include page="test_list_subject.jsp" />
+            <jsp:include page="GRMR002.jsp" />
           </c:if>
         </c:when>
         <c:when test="${mode == 'student'}">
           <c:if test="${not empty studentResults}">
-            <jsp:include page="test_list_student.jsp" />
+            <jsp:include page="GRMR003.jsp" />
           </c:if>
         </c:when>
       </c:choose>

@@ -44,7 +44,7 @@ public class TestListController extends CommonServlet {
             classNum == null || classNum.isEmpty() ||
             subjectCd == null || subjectCd.isEmpty()) {
           request.setAttribute("errorSubject", "入学年度とクラスと科目を選択してください");
-          request.getRequestDispatcher("/test/test_list.jsp").forward(request, response);
+          request.getRequestDispatcher("/test/GRMU001.jsp").forward(request, response);
           return;
         }
 
@@ -55,14 +55,14 @@ public class TestListController extends CommonServlet {
           request.setAttribute("resultList", list);
         }
 
-        request.getRequestDispatcher("/test/test_list.jsp").forward(request, response);
+        request.getRequestDispatcher("/test/GRMU001.jsp").forward(request, response);
 
       } else if ("student".equals(mode)) {
         String studentNo = request.getParameter("studentNo");
 
         if (studentNo == null || studentNo.trim().isEmpty()) {
           request.setAttribute("errorStudent", "学生番号を入力してください");
-          request.getRequestDispatcher("/test/test_list.jsp").forward(request, response);
+          request.getRequestDispatcher("/test/GRMU001.jsp").forward(request, response);
           return;
         }
 
@@ -75,11 +75,11 @@ public class TestListController extends CommonServlet {
           request.setAttribute("studentName", list.get(0).getStudentName()); // optional
         }
 
-        request.getRequestDispatcher("/test/test_list.jsp").forward(request, response);
+        request.getRequestDispatcher("/test/GRMU001.jsp").forward(request, response);
 
       } else {
         // 初期表示用メッセージ（modeなし）
-        request.getRequestDispatcher("/test/test_list.jsp").forward(request, response);
+        request.getRequestDispatcher("/test/GRMU001.jsp").forward(request, response);
       }
 
     } catch (Exception e) {

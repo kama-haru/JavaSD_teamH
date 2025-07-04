@@ -23,7 +23,7 @@
             <%-- 画面下部にリンクを配置するためのdiv --%>
             <div style="margin-top: 120px; ">
                 <%-- request.getContextPath() を使ってコンテキストパスからの相対パスでリンクを生成 --%>
-                <a href="<%= request.getContextPath() %>/main/index.jsp" style="margin-right: 80px;">戻る</a>
+                <a href="<%= request.getContextPath() %>/main/MMNU001.jsp" style="margin-right: 80px;">戻る</a>
                 <%-- EL式を使って学生一覧画面へのリンクを生成 --%>
                 <a href="${pageContext.request.contextPath}/student/list">学生一覧</a>
             </div>

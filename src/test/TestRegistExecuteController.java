@@ -86,7 +86,7 @@ public class TestRegistExecuteController extends CommonServlet {
         return;
       }
 
-      request.getRequestDispatcher("/test/test_regist_done.jsp").forward(request, response);
+      request.getRequestDispatcher("/test/GRMU002.jsp").forward(request, response);
 
     } catch (NumberFormatException e) {
       request.setAttribute("errorMessage", "数値の形式が正しくありません。");
@@ -121,7 +121,7 @@ public class TestRegistExecuteController extends CommonServlet {
       request.setAttribute("errorMap", errorMap);
     }
 
-    request.getRequestDispatcher("/test/test_regist.jsp").forward(request, response);
+    request.getRequestDispatcher("/test/GRMR001.jsp").forward(request, response);
   }
 
   @Override

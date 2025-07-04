@@ -21,7 +21,7 @@ public class SubjectDeleteExecuteController extends CommonServlet {
 
         if (cd == null || cd.trim().isEmpty()) {
             request.setAttribute("error", "科目コードが指定されていません。");
-            request.getRequestDispatcher("subject_delete.jsp").forward(request, response);
+            request.getRequestDispatcher("SBJM006.jsp").forward(request, response);
             return;
         }
 
@@ -30,7 +30,7 @@ public class SubjectDeleteExecuteController extends CommonServlet {
 
         if (subject == null) {
             request.setAttribute("error", "指定された科目は存在しません。");
-            request.getRequestDispatcher("subject_delete.jsp").forward(request, response);
+            request.getRequestDispatcher("SBJM006.jsp").forward(request, response);
         } else {
             request.setAttribute("cd", cd);
             request.getRequestDispatcher("SubjectDeleteController").forward(request, response);

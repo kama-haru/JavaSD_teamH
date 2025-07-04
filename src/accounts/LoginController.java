@@ -12,7 +12,7 @@ public class LoginController extends CommonServlet {
 	@Override
 	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		// login.jsp にフォワード
-		req.getRequestDispatcher("login.jsp").forward(req, resp);
+		req.getRequestDispatcher("LOGI001.jsp").forward(req, resp);
 	}
 
 	@Override

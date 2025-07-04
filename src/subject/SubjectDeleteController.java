@@ -22,10 +22,10 @@ public class SubjectDeleteController extends CommonServlet {
         boolean success = dao.delete(cd);
 
         if (success) {
-            response.sendRedirect("subject_delete_done.jsp");
+            response.sendRedirect("SBJM007.jsp");
         } else {
             request.setAttribute("error", "削除に失敗しました。");
-            request.getRequestDispatcher("subject_delete.jsp").forward(request, response);
+            request.getRequestDispatcher("SBJM006.jsp").forward(request, response);
         }
     }
     @Override

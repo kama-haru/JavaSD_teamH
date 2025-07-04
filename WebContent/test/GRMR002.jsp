@@ -3,7 +3,7 @@
 
 <!-- ログインチェック -->
 <c:if test="${empty sessionScope.user}">
-  <c:redirect url="/accounts/login.jsp" />
+  <c:redirect url="/accounts/LOGI001.jsp" />
 </c:if>
 
 <!-- 成績一覧（科目）見出し -->

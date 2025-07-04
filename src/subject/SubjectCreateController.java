@@ -27,7 +27,7 @@ public class SubjectCreateController extends CommonServlet {
         SubjectDao dao = new SubjectDao();
         dao.insert(subject);
 
-        request.getRequestDispatcher("/subject/subject_create_done.jsp").forward(request, response);
+        request.getRequestDispatcher("/subject/SBJM003.jsp").forward(request, response);
     }
 
     @Override

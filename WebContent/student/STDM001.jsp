@@ -8,7 +8,7 @@
 
 <%-- 未ログインの場合はログインページへリダイレクト --%>
 <c:if test="${empty sessionScope.user}">
-	<c:redirect url="/accounts/login.jsp" />
+	<c:redirect url="/accounts/LOGI001.jsp" />
 </c:if>
 
 <%-- 共通レイアウト base.jsp を読み込む --%>

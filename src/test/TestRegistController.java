@@ -66,7 +66,7 @@ public class TestRegistController extends CommonServlet {
     }
 
     // JSPへフォワード
-    request.getRequestDispatcher("/test/test_regist.jsp").forward(request, response);
+    request.getRequestDispatcher("/test/GRMR001.jsp").forward(request, response);
   }
 
   @Override

@@ -43,7 +43,7 @@ public class StudentUpdateController extends HttpServlet {
             String studentNo = request.getParameter("no");
             if (studentNo == null || studentNo.isEmpty()) {
                 request.setAttribute("error", "学生番号が指定されていません。");
-                request.getRequestDispatcher("/student/student_update.jsp").forward(request, response);
+                request.getRequestDispatcher("/student/STDM004.jsp").forward(request, response);
                 return;
             }
 
@@ -54,7 +54,7 @@ public class StudentUpdateController extends HttpServlet {
                 // 学生が存在しない、または他校の学生の場合はエラー
                 if (student == null || !schoolCd.equals(student.getSchoolCd())) {
                     request.setAttribute("error", "指定された学生情報が見つからないか、権限がありません。");
-                    request.getRequestDispatcher("/student/student_update.jsp").forward(request, response);
+                    request.getRequestDispatcher("/student/STDM004.jsp").forward(request, response);
                     return;
                 }
 
@@ -82,7 +82,7 @@ public class StudentUpdateController extends HttpServlet {
         }
 
         // student_update.jspにフォワード
-        request.getRequestDispatcher("/student/student_update.jsp").forward(request, response);
+        request.getRequestDispatcher("/student/STDM004.jsp").forward(request, response);
     }
 
     // POSTリクエスト（更新実行）を処理
@@ -107,7 +107,7 @@ public class StudentUpdateController extends HttpServlet {
             // 学生が存在しない、または他校の学生の場合はエラー
             if (student == null || !schoolCd.equals(student.getSchoolCd())) {
                 request.setAttribute("error", "指定された学生情報が見つからないか、権限がありません。");
-                request.getRequestDispatcher("/student/student_update.jsp").forward(request, response);
+                request.getRequestDispatcher("/student/STDM004.jsp").forward(request, response);
                 return;
             }
 
@@ -124,7 +124,7 @@ public class StudentUpdateController extends HttpServlet {
 
 
                 // 更新成功なら完了画面へフォワード
-                request.getRequestDispatcher("/student/student_update_done.jsp").forward(request, response);
+                request.getRequestDispatcher("/student/STDM005.jsp").forward(request, response);
             } else {
                 // 失敗ならエラーメッセージをセットして、doGetを呼び出し編集画面を再表示
                 request.setAttribute("error", "情報の更新に失敗しました。");

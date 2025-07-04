@@ -81,7 +81,7 @@ public class StudentListController extends HttpServlet {
             request.setAttribute("error", "データの取得中にエラーが発生しました。");
         }
 
-        request.getRequestDispatcher("/student/student_list.jsp").forward(request, response);
+        request.getRequestDispatcher("/student/STDM001.jsp").forward(request, response);
     }
 
     @Override

@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <c:if test="${empty sessionScope.user}">
-	<c:redirect url="/accounts/login.jsp" />
+	<c:redirect url="/accounts/LOGI001.jsp" />
 </c:if>
 
 <link rel="stylesheet"
@@ -16,7 +16,7 @@
 		</div>
 
 		<div class="text-end mb-3 mx-3">
-			<a href="${pageContext.request.contextPath}/subject/subject_create.jsp"
+			<a href="${pageContext.request.contextPath}/subject/SBJM002.jsp"
 				class="text-primary text-decoration-underline">新規登録</a>
 		</div>
 
@@ -35,16 +35,16 @@
 						<td>${subject.cd}</td>
 						<td>${subject.name}</td>
 						<td><a
-							href="${pageContext.request.contextPath}/subject/subject_update.jsp?cd=${subject.cd}">変更</a></td>
+							href="${pageContext.request.contextPath}/subject/SBJM004.jsp?cd=${subject.cd}">変更</a></td>
 						<td><a
-							href="${pageContext.request.contextPath}/subject/subject_delete.jsp?cd=${subject.cd}&name=${subject.name}">削除</a></td>
+							href="${pageContext.request.contextPath}/subject/SBJM006.jsp?cd=${subject.cd}&name=${subject.name}">削除</a></td>
 					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
 
 		<p>
-			<a href="${pageContext.request.contextPath}/main/index.jsp">TOPページへ</a>
+			<a href="${pageContext.request.contextPath}/main/MMNU001.jsp">TOPページへ</a>
 		</p>
 	</c:param>
 </c:import>

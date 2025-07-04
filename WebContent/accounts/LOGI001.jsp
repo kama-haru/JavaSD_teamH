@@ -4,7 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <c:if test="${not empty sessionScope.user}">
-	<c:redirect url="/main/index.jsp" />
+	<c:redirect url="/main/MMNU001.jsp" />
 </c:if>
 
 <c:import url="/base.jsp">

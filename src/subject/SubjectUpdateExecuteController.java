@@ -25,7 +25,7 @@ public class SubjectUpdateExecuteController extends CommonServlet {
             req.setAttribute("errorCd", "科目コードが存在しません。");
             req.setAttribute("cd", cd);
             req.setAttribute("name", name);
-            req.getRequestDispatcher("/subject/subject_update.jsp").forward(req, resp);
+            req.getRequestDispatcher("/subject/SBJM004.jsp").forward(req, resp);
             return;
         }
 

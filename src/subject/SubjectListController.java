@@ -23,7 +23,7 @@ public class SubjectListController extends CommonServlet {
         List<Subject> subjects = dao.getSubjectsBySchoolCd(schoolCd);
 
         req.setAttribute("subjects", subjects);
-        req.getRequestDispatcher("/subject/subject_list.jsp").forward(req, resp);
+        req.getRequestDispatcher("/subject/SBJM001.jsp").forward(req, resp);
     }
 
     @Override

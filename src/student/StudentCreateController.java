@@ -52,7 +52,7 @@ public class StudentCreateController extends HttpServlet {
         }
 
         // 処理を student_create.jsp にフォワード（転送）して画面を表示
-        request.getRequestDispatcher("/student/student_create.jsp").forward(request, response);
+        request.getRequestDispatcher("/student/STDM002.jsp").forward(request, response);
     }
 
     // POSTリクエストが来た場合も、同じくGETメソッドの処理を呼び出す

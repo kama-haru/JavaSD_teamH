@@ -25,7 +25,7 @@ public class SubjectUpdateController extends CommonServlet {
         SubjectDao dao = new SubjectDao();
         dao.update(subject);
 
-        req.getRequestDispatcher("/subject/subject_update_done.jsp").forward(req, resp);
+        req.getRequestDispatcher("/subject/SBJM005.jsp").forward(req, resp);
     }
 
     @Override

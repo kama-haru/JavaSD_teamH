@@ -50,7 +50,7 @@ public class StudentUpdateExecuteController extends HttpServlet {
 
             // student_update.jspにフォワードしてエラー表示
             // ※この場合、StudentUpdateControllerを経由しないため、クラスの選択肢などが再設定されない問題がある
-            request.getRequestDispatcher("/student/student_update.jsp").forward(request, response);
+            request.getRequestDispatcher("/student/STDM004.jsp").forward(request, response);
             return;
         }
 
@@ -61,7 +61,7 @@ public class StudentUpdateExecuteController extends HttpServlet {
             // 更新対象の学生が存在するか、権限があるかチェック
             if (student == null || !schoolCd.equals(student.getSchoolCd())) {
                 request.setAttribute("error", "指定された学生情報が見つからないか、権限がありません。");
-                request.getRequestDispatcher("/student/student_update.jsp").forward(request, response);
+                request.getRequestDispatcher("/student/STDM004.jsp").forward(request, response);
                 return;
             }
 
@@ -82,7 +82,7 @@ public class StudentUpdateExecuteController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "処理中にエラーが発生しました。");
-            request.getRequestDispatcher("../error.jsp").forward(request, response);
+            request.getRequestDispatcher("../ERRO001.jsp").forward(request, response);
         }
     }
 }

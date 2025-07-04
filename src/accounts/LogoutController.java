@@ -22,7 +22,7 @@ public class LogoutController extends CommonServlet {
 		}
 
 		// ログアウト後の画面（logout.jsp）にフォワード
-		req.getRequestDispatcher("/accounts/logout.jsp").forward(req, resp);
+		req.getRequestDispatcher("/accounts/LOGO001.jsp").forward(req, resp);
 	}
 
 	// POSTメソッドは使用しないため、空実装

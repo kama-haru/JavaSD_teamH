@@ -96,7 +96,7 @@ public class StudentCreateExecuteController extends HttpServlet {
 			dao.save(student);
 
 			// 登録完了画面にフォワード
-			request.getRequestDispatcher("/student/student_create_done.jsp").forward(request, response);
+			request.getRequestDispatcher("/student/STDM003.jsp").forward(request, response);
 
 		} catch (Exception e) {
 			e.printStackTrace();

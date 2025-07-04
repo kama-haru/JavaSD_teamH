@@ -7,7 +7,7 @@
 
             <!-- メニュー -->
             <li class="mb-2">
-                <a href="${pageContext.request.contextPath}/main"
+                <a href="${pageContext.request.contextPath}/main/MMNU001.jsp"
                    class="text-decoration-none d-block">メニュー</a>
             </li>
 

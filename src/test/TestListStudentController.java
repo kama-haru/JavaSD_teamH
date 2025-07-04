@@ -53,7 +53,7 @@ public class TestListStudentController extends CommonServlet {
       }
 
       request.setAttribute("mode", "student");
-      request.getRequestDispatcher("/test/test_list.jsp").forward(request, response);
+      request.getRequestDispatcher("/test/GRMU001.jsp").forward(request, response);
 
     } catch (Exception e) {
       throw new ServletException(e);
@@ -63,6 +63,6 @@ public class TestListStudentController extends CommonServlet {
 @Override
 protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 	// TODO 自動生成されたメソッド・スタブ
-	
+
 }
 }

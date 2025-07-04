@@ -41,11 +41,11 @@ public class LoginExecuteController extends CommonServlet {
 																			// 重要！
 
 				// メインページへリダイレクト
-				resp.sendRedirect(req.getContextPath() + "/main/index.jsp");
+				resp.sendRedirect(req.getContextPath() + "/main/MMNU001.jsp");
 			} else {
 				// ログイン失敗時、エラーメッセージを設定し、再びログイン画面へ
 				req.setAttribute("error", "IDまたはパスワードが正しくありません");
-				req.getRequestDispatcher("login.jsp").forward(req, resp);
+				req.getRequestDispatcher("LOGI001.jsp").forward(req, resp);
 			}
 
 		} catch (Exception e) {
@@ -56,7 +56,7 @@ public class LoginExecuteController extends CommonServlet {
 			session.setAttribute("serverError", true);
 
 			// エラーページにリダイレクト
-			resp.sendRedirect(req.getContextPath() + "/error.jsp");
+			resp.sendRedirect(req.getContextPath() + "/ERRO001.jsp");
 		}
 
 	}
