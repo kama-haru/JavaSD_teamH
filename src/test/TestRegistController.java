@@ -23,12 +23,12 @@ public class TestRegistController extends CommonServlet {
     HttpSession session = request.getSession();
     String schoolCd = (String) session.getAttribute("schoolCd");
 
-    // DAOインスタンス
+    // DAO
     TestDao testDao = new TestDao();
     ClassNumDao classDao = new ClassNumDao();
     SubjectDao subjectDao = new SubjectDao();
 
-    // プルダウンデータ設定
+    // セレクトボックス用データ設定
     request.setAttribute("entYearList", testDao.getEntYearList(schoolCd));
     request.setAttribute("classNumList", classDao.getClassNumList(schoolCd));
     request.setAttribute("subjectList", subjectDao.getAllSubjects(schoolCd));
@@ -38,29 +38,39 @@ public class TestRegistController extends CommonServlet {
     String classNum = request.getParameter("classNum");
     String subjectCd = request.getParameter("subjectCd");
     String noStr = request.getParameter("no");
+    String searched = request.getParameter("searched");
 
-    // 検索条件保持
+    // 入力保持
     request.setAttribute("entYear", entYear);
     request.setAttribute("classNum", classNum);
     request.setAttribute("subjectCd", subjectCd);
     request.setAttribute("no", noStr);
 
-    // 検索実行（全学生を取得）
-    if (entYear != null && classNum != null && subjectCd != null && noStr != null &&
-        !entYear.isEmpty() && !classNum.isEmpty() && !subjectCd.isEmpty() && !noStr.isEmpty()) {
-
-      int no = Integer.parseInt(noStr);
-      List<Test> list = testDao.selectByEntYearClassSubject(entYear, classNum, subjectCd, no, schoolCd);
-      request.setAttribute("list", list);
+    // 検索実行
+    if ("true".equals(searched)) {
+      if (entYear == null || entYear.isEmpty() ||
+          classNum == null || classNum.isEmpty() ||
+          subjectCd == null || subjectCd.isEmpty() ||
+          noStr == null || noStr.isEmpty()) {
+        // 入力不備
+        request.setAttribute("error", "入学年度とクラスと科目と回数を選択してください");
+      } else {
+        try {
+          int no = Integer.parseInt(noStr);
+          List<Test> list = testDao.selectByEntYearClassSubject(entYear, classNum, subjectCd, no, schoolCd);
+          request.setAttribute("list", list);
+        } catch (NumberFormatException e) {
+          request.setAttribute("error", "回数の形式が正しくありません");
+        }
+      }
     }
 
     // JSPへフォワード
     request.getRequestDispatcher("/test/test_regist.jsp").forward(request, response);
   }
 
-@Override
-protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-	// TODO 自動生成されたメソッド・スタブ
-	
-}
+  @Override
+  protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    // POSTは未使用
+  }
 }

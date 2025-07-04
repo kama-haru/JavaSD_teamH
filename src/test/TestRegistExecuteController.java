@@ -1,7 +1,9 @@
 package test;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,110 +16,116 @@ import tool.CommonServlet;
 
 @WebServlet("/test/test_regist_execute")
 public class TestRegistExecuteController extends CommonServlet {
-	@Override
-	protected void post(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setCharacterEncoding("UTF-8");
 
-		try {
-			String noStr = request.getParameter("no");
-			if (noStr == null || noStr.isEmpty()) {
-				request.setAttribute("errorMessage", "回数を選択してください。");
-				forwardWithList(request, response);
-				return;
-			}
+  @Override
+  protected void post(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    request.setCharacterEncoding("UTF-8");
 
-			int entYear = Integer.parseInt(request.getParameter("entYear"));
-			String classNum = request.getParameter("classNum");
-			String subjectCd = request.getParameter("subjectCd");
-			int no = Integer.parseInt(noStr);
+    try {
+      String noStr = request.getParameter("no");
+      if (noStr == null || noStr.isEmpty()) {
+        request.setAttribute("errorMessage", "回数を選択してください。");
+        forwardWithList(request, response, null);
+        return;
+      }
 
-			HttpSession session = request.getSession();
-			String schoolCd = (String) session.getAttribute("schoolCd");
+      int entYear = Integer.parseInt(request.getParameter("entYear"));
+      String classNum = request.getParameter("classNum");
+      String subjectCd = request.getParameter("subjectCd");
+      int no = Integer.parseInt(noStr);
 
-			TestDao dao = new TestDao();
-			List<Test> list = dao.getAllStudentsForGradeEntry(entYear, classNum, schoolCd);
+      HttpSession session = request.getSession();
+      String schoolCd = (String) session.getAttribute("schoolCd");
 
-			String[] deleteIds = request.getParameterValues("delete");
+      TestDao dao = new TestDao();
+      List<Test> list = dao.getAllStudentsForGradeEntry(entYear, classNum, schoolCd);
 
-			for (Test test : list) {
-				String studentNo = test.getStudentNo().trim();
-				boolean shouldDelete = false;
+      String[] deleteIds = request.getParameterValues("delete");
 
-				if (deleteIds != null) {
-					for (String del : deleteIds) {
-						if (del.equals(studentNo)) {
-							shouldDelete = true;
-							break;
-						}
-					}
-				}
+      Map<String, String> errorMap = new HashMap<>();
 
-				if (shouldDelete) {
-					// 修正：schoolCd を考慮した削除
-					dao.deleteWithPoint(classNum, subjectCd, no, studentNo, schoolCd);
-					continue;
-				}
+      for (Test test : list) {
+        String studentNo = test.getStudentNo().trim();
+        boolean shouldDelete = false;
 
-				String param = request.getParameter("point_" + studentNo);
-				if (param == null || param.trim().isEmpty()) {
-					request.setAttribute("errorMessage", "点数を入力してください。");
-					forwardWithList(request, response);
-					return;
-				}
+        if (deleteIds != null) {
+          for (String del : deleteIds) {
+            if (del.equals(studentNo)) {
+              shouldDelete = true;
+              break;
+            }
+          }
+        }
 
-				if (param.matches("\\d+")) {
-					int point = Integer.parseInt(param);
-					if (point > 100) {
-						request.setAttribute("errorMessage", "点数は100以下で入力してください。");
-						forwardWithList(request, response);
-						return;
-					}
-					// 修正：schoolCd を含む保存
-					dao.saveOrUpdateWithSchoolCd(schoolCd, classNum, subjectCd, no, studentNo, point);
-				} else {
-					request.setAttribute("errorMessage", "点数が正しく入力されていない学生がいます。");
-					forwardWithList(request, response);
-					return;
-				}
-			}
+        if (shouldDelete) {
+          dao.deleteWithPoint(classNum, subjectCd, no, studentNo, schoolCd);
+          continue;
+        }
 
-			request.getRequestDispatcher("/test/test_regist_done.jsp").forward(request, response);
+        String param = request.getParameter("point_" + studentNo);
+        if (param == null || param.trim().isEmpty()) {
+          errorMap.put(studentNo, "点数を入力してください。");
+          continue;
+        }
 
-		} catch (NumberFormatException e) {
-			request.setAttribute("errorMessage", "数値の形式が正しくありません。");
-			forwardWithList(request, response);
-		} catch (Exception e) {
-			throw new IOException(e);
-		}
-	}
+        if (param.matches("\\d+")) {
+          int point = Integer.parseInt(param);
+          if (point < 0 || point > 100) {
+            errorMap.put(studentNo, "0～100の範囲で入力してください。");
+            continue;
+          }
+          dao.saveOrUpdateWithSchoolCd(schoolCd, classNum, subjectCd, no, studentNo, point);
+        } else {
+          errorMap.put(studentNo, "点数が正しく入力されていません。");
+        }
+      }
 
-	private void forwardWithList(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String entYear = request.getParameter("entYear");
-		String classNum = request.getParameter("classNum");
-		String subjectCd = request.getParameter("subjectCd");
-		String noStr = request.getParameter("no");
+      if (!errorMap.isEmpty()) {
+        request.setAttribute("errorMessage", "入力に誤りがあります。");
+        forwardWithList(request, response, errorMap);
+        return;
+      }
 
-		HttpSession session = request.getSession();
-		String schoolCd = (String) session.getAttribute("schoolCd");
+      request.getRequestDispatcher("/test/test_regist_done.jsp").forward(request, response);
 
-		TestDao dao = new TestDao();
-		List<Test> list = dao.getAllStudentsForGradeEntry(Integer.parseInt(entYear), classNum, schoolCd);
+    } catch (NumberFormatException e) {
+      request.setAttribute("errorMessage", "数値の形式が正しくありません。");
+      forwardWithList(request, response, null);
+    } catch (Exception e) {
+      throw new IOException(e);
+    }
+  }
 
-		request.setAttribute("entYear", entYear);
-		request.setAttribute("classNum", classNum);
-		request.setAttribute("subjectCd", subjectCd);
-		request.setAttribute("no", noStr);
-		request.setAttribute("list", list);
+  private void forwardWithList(HttpServletRequest request, HttpServletResponse response, Map<String, String> errorMap) throws Exception {
+    String entYear = request.getParameter("entYear");
+    String classNum = request.getParameter("classNum");
+    String subjectCd = request.getParameter("subjectCd");
+    String noStr = request.getParameter("no");
 
-		request.setAttribute("entYearList", dao.getEntYearList());
-		request.setAttribute("classNumList", dao.getClassNumList());
-		request.setAttribute("subjectList", dao.getSubjectList());
+    HttpSession session = request.getSession();
+    String schoolCd = (String) session.getAttribute("schoolCd");
 
-		request.getRequestDispatcher("/test/test_regist.jsp").forward(request, response);
-	}
+    TestDao dao = new TestDao();
+    List<Test> list = dao.getAllStudentsForGradeEntry(Integer.parseInt(entYear), classNum, schoolCd);
 
-	@Override
-	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		post(req, resp);
-	}
+    request.setAttribute("entYear", entYear);
+    request.setAttribute("classNum", classNum);
+    request.setAttribute("subjectCd", subjectCd);
+    request.setAttribute("no", noStr);
+    request.setAttribute("list", list);
+    request.setAttribute("entYearList", dao.getEntYearList());
+    request.setAttribute("classNumList", dao.getClassNumList());
+    request.setAttribute("subjectList", dao.getSubjectList());
+
+    if (errorMap != null) {
+      request.setAttribute("errorMap", errorMap);
+    }
+
+    request.getRequestDispatcher("/test/test_regist.jsp").forward(request, response);
+  }
+
+  @Override
+  protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    post(req, resp);
+  }
 }

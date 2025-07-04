@@ -500,10 +500,11 @@ public class TestDao {
 	}
 	public List<Test> selectByEntYearClassSubject(String entYear, String classNum, String subjectCd, int no, String schoolCd) throws Exception {
 	    List<Test> list = new ArrayList<>();
+
 	    String sql = "SELECT s.NO AS STUDENT_NO, s.NAME AS STUDENT_NAME, s.ENT_YEAR, s.CLASS_NUM, t.POINT " +
 	                 "FROM STUDENT s " +
 	                 "LEFT JOIN TEST t ON s.NO = t.STUDENT_NO AND t.SUBJECT_CD = ? AND t.NO = ? " +
-	                 "WHERE s.ENT_YEAR = ? AND s.CLASS_NUM = ? AND s.SCHOOL_CD = ? " +
+	                 "WHERE s.ENT_YEAR = ? AND s.CLASS_NUM = ? AND s.SCHOOL_CD = ? AND s.IS_ATTEND = 1 " +  // ✅ fixed here
 	                 "ORDER BY s.NO";
 
 	    try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql)) {
@@ -525,6 +526,9 @@ public class TestDao {
 	            }
 	        }
 	    }
+
 	    return list;
 	}
+
+
 }
