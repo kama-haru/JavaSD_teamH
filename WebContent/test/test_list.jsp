@@ -52,7 +52,7 @@
             </div>
 
             <div class="col-auto">
-              <button type="submit" name="mode" value="subject" class="btn btn-primary btn-sm">検索</button>
+              <button type="submit" name="mode" value="subject" class="btn btn-secondary btn-sm">検索</button>
             </div>
           </div>
 
@@ -68,7 +68,7 @@
             </div>
 
             <div class="col-auto">
-              <button type="submit" name="mode" value="student" class="btn btn-primary btn-sm">検索</button>
+              <button type="submit" name="mode" value="student" class="btn btn-secondary btn-sm">検索</button>
             </div>
           </div>
         </form>

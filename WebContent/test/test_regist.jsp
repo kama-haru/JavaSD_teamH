@@ -59,7 +59,7 @@
 
       <!-- 検索エラー -->
       <c:if test="${not empty error}">
-        <div class="text-danger small mt-1">${error}</div>
+        <div class="text-warning small mt-1">${error}</div>
       </c:if>
 
       <!-- 成績が存在しない -->
@@ -71,7 +71,7 @@
 
       <!-- 成績登録エラー -->
       <c:if test="${not empty errorMessage}">
-        <div class="text-danger small mt-2">${errorMessage}</div>
+        <div class="text-warning small mt-1">${errorMessage}</div>
       </c:if>
 
       <!-- 成績一覧表示 -->
