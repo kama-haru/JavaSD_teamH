@@ -14,7 +14,7 @@
       </div>
 
       <div class="card p-4 mb-4" style="background-color: transparent;">
-        <!-- ■科目情報 -->
+        <!-- 科目情報フォーム -->
         <form action="test_list" method="get" class="mb-4">
           <div class="row g-3 align-items-center mb-2">
             <div class="col-auto fw-bold">科目情報</div>
@@ -54,18 +54,18 @@
             </div>
           </div>
 
-          <!-- 科目情報エラー -->
+          <!-- 科目情報エラー（黄色） -->
           <c:if test="${not empty errorSubject}">
-            <div class="text-danger small ms-3">
+            <div class="text-warning small ms-3">
               <i class="bi bi-exclamation-circle"></i> ${errorSubject}
             </div>
           </c:if>
         </form>
 
-        <!-- 🔻 薄い線（境界） -->
-        <hr style="border: 0; height: 1px; background-color: #ccc; margin: 0.5rem 0;" />
+        <!-- 仕切り線 -->
+        <hr class="my-3" />
 
-        <!-- ■学生情報 -->
+        <!-- 学生情報フォーム -->
         <form action="test_list" method="get">
           <div class="row g-3 align-items-center">
             <div class="col-auto fw-bold">学生情報</div>
@@ -89,19 +89,21 @@
             </div>
           </c:if>
         </form>
+      </div>
 
-        <!-- ✅ ガイドメッセージ（線の下に常に表示） -->
-        <p class="text-info small mt-3 ms-1">
+      <!-- 線の下にガイドメッセージ -->
+      <c:if test="${empty mode && empty errorMessage && empty errorSubject && empty errorStudent}">
+        <p class="text-info small ms-1 mt-2">
           科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
         </p>
+      </c:if>
 
-        <!-- 共通エラーメッセージ -->
-        <c:if test="${not empty errorMessage}">
-          <div class="text-danger small ms-1 mt-3">
-            <i class="bi bi-exclamation-triangle"></i> ${errorMessage}
-          </div>
-        </c:if>
-      </div>
+      <!-- 共通エラーメッセージ -->
+      <c:if test="${not empty errorMessage}">
+        <div class="text-danger small ms-1 mt-3">
+          <i class="bi bi-exclamation-triangle"></i> ${errorMessage}
+        </div>
+      </c:if>
 
       <!-- 検索結果表示 -->
       <c:choose>
