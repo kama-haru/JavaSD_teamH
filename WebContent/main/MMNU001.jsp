@@ -34,8 +34,8 @@
 					class="d-flex justify-content-center align-items-center flex-column text-center p-4 rounded-3 shadow-sm"
 					style="background-color: #d9ead3; height: 150px;">
 					<h5 class="fw-normal mb-1">成績管理</h5>
-					<a href="#" class="fs-5 text-decoration-underline d-block mb-1">成績登録</a>
-					<a href="#" class="fs-5 text-decoration-underline d-block">成績参照</a>
+					<a href="${pageContext.request.contextPath}/test/test_regist" class="fs-5 text-decoration-underline d-block mb-1">成績登録</a>
+					<a href="${pageContext.request.contextPath}/test/test_list" class="fs-5 text-decoration-underline d-block">成績参照</a>
 				</div>
 			</div>
 
