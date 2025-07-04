@@ -43,6 +43,10 @@
 							<option value="${year}" ${entYearValue == year ? 'selected' : ''}>${year}</option>
 						</c:forEach>
 					</select>
+
+
+
+
 				</div>
 
 				<%-- クラスの絞り込み --%>
@@ -70,8 +74,13 @@
 
 				<%-- 絞り込み実行ボタン --%>
 				<div class="col-md-3 mb-1">
-					<button type="submit" class="btn btn-secondary">絞込み</button>
+
+					<button type="submit" name="filter" class="btn btn-secondary">絞込み</button>
 				</div>
+				<%-- 入学年度が選択されていない場合のエラーメッセージを表示 --%>
+				<c:if test="${not empty error_entYear}">
+					<div class="text-warning small mt-1">${error_entYear}</div>
+				</c:if>
 			</form>
 		</div>
 
@@ -91,7 +100,8 @@
 						<th class="text-start">氏名</th>
 						<th>クラス</th>
 						<th>在学中</th>
-						<th></th> <%-- 変更リンク用の空ヘッダー --%>
+						<th></th>
+						<%-- 変更リンク用の空ヘッダー --%>
 					</tr>
 				</thead>
 
@@ -108,8 +118,7 @@
 									<td class="text-start">${student.name}</td>
 									<td>${student.classNum}</td>
 									<td>
-										<%-- c:chooseで在学状況(isAttend)がtrueかfalseかによって表示を切り替え --%>
-										<c:choose>
+										<%-- c:chooseで在学状況(isAttend)がtrueかfalseかによって表示を切り替え --%> <c:choose>
 											<c:when test="${student.attend}">○</c:when>
 											<c:otherwise>×</c:otherwise>
 										</c:choose>
