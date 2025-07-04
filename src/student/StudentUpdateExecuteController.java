@@ -56,7 +56,7 @@ public class StudentUpdateExecuteController extends HttpServlet {
 
         try {
             StudentDao dao = new StudentDao();
-            Student student = dao.findByNo(no);
+            Student student = dao.findByNo(no, schoolCd);
 
             // 更新対象の学生が存在するか、権限があるかチェック
             if (student == null || !schoolCd.equals(student.getSchoolCd())) {

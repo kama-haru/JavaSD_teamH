@@ -48,8 +48,8 @@ public class StudentUpdateController extends HttpServlet {
             }
 
             try {
-                StudentDao studentDao = new StudentDao();
-                Student student = studentDao.findByNo(studentNo);
+                StudentDao dao = new StudentDao();
+                Student student = dao.findByNo(studentNo, schoolCd);
 
                 // 学生が存在しない、または他校の学生の場合はエラー
                 if (student == null || !schoolCd.equals(student.getSchoolCd())) {
@@ -102,7 +102,7 @@ public class StudentUpdateController extends HttpServlet {
 
         try {
             StudentDao dao = new StudentDao();
-            Student student = dao.findByNo(no); // DBから現在の学生情報を取得
+            Student student = dao.findByNo(no, schoolCd); // DBから現在の学生情報を取得
 
             // 学生が存在しない、または他校の学生の場合はエラー
             if (student == null || !schoolCd.equals(student.getSchoolCd())) {

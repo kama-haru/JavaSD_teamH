@@ -44,16 +44,16 @@ public class StudentDao {
     }
 
     // 2. 学生番号(no)で学生情報を1件検索する
-    public Student findByNo(String no) throws Exception {
-        String sql = "SELECT * FROM STUDENT WHERE NO = ?";
+    public Student findByNo(String no, String schoolCd) throws Exception {
+        String sql = "SELECT * FROM STUDENT WHERE NO = ? AND SCHOOL_CD = ?";
 
         try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, no);
+            ps.setString(2, schoolCd);
             ResultSet rs = ps.executeQuery();
 
-            // 結果が存在すれば、Studentオブジェクトにデータを詰めて返す
             if (rs.next()) {
                 Student student = new Student();
                 student.setNo(rs.getString("NO"));
@@ -64,10 +64,10 @@ public class StudentDao {
                 student.setSchoolCd(rs.getString("SCHOOL_CD"));
                 return student;
             }
-            // 存在しない場合はnullを返す
             return null;
         }
     }
+
 
     // 3. 学生情報を更新する
     public boolean update(Student student) throws Exception {
